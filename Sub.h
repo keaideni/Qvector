@@ -1,13 +1,7 @@
 #ifndef SUB_H
 #define SUB_H
-#include <iostream>
-#include <fstream>
-#include <Eigen/Dense>
-#include <cmath>
-#include "Parameter.h"
-#include<sstream>
-#include<string>
 
+#include "OP.h"
 
 using  namespace std; 
 using namespace Eigen;
