@@ -494,18 +494,19 @@ const OP operator*(const double& d, const OP& a)
 
 void OP::save(ofstream& outfile)const
 {
+    outfile<<_PRL.size()<<endl;
 	for(auto it=_PRL.begin(); it!=_PRL.end(); ++it)
 	{
 		outfile<<it->first<<"\t"<<it->second<<endl;
 	}
-
+    outfile<<_PDim.size()<<endl;
 	for(auto it=_PDim.begin(); it!=_PDim.end(); ++it)
 	{
 		outfile<<it->first<<"\t"<<endl;
 	}
 
 	outfile.precision(20);
-
+    outfile<<_PMat.size()<<endl;
 	for(auto it=_PMat.begin(); it!=_PMat.end();++it)
 	{
 		outfile<<it->first<<endl
@@ -525,8 +526,35 @@ void OP::read(ifstream& infile)
 
 
 	string Rname, Lname;
-	int Dim;
+	int Dim, tempsize;
+    infile>>tempsize;
+    for(int i=0; i<tempsize; ++i)
+    {
+       
+        infile>>Rname>>Lname;
+	    _PRL.insert(pair<string, string>(Rname, Lname));
+    }
 
-	infile>>Rname>>Lname;
-	_PRL.insert(pair<string, string>(Rname, Lname));
+    infile>>tempsize;
+    for(int i=0; i<tempsize; ++i)
+    {
+        infile>>Rname>>Dim;
+	    _PDim.insert(pair<string, int>(Rname, Dim));
+    }
+
+    infile>>tempsize;
+    for(int i=0; i<tempsize; ++i)
+    {
+        infile>>Rname;
+        MatrixXd temp(MatrixXd::Zero(_PDim.at(Rname), _PDim.at(_PRL.at(Rname))));
+
+        for(int j=0; j<temp.rows(); ++j)
+        {
+            for(int k=0; k<temp.cols(); ++k)
+            {
+                infile>>temp(j, k);
+            }
+        }
+	    _PMat.insert(pair<string, MatrixXd>(Rname, temp));
+    }
 }
