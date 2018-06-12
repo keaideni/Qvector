@@ -425,9 +425,9 @@ const OP& OP::operator=(const OP& a)
 
 
 
-const OP& OP::time(const OP& a, const OP& b):
-_PDim(a._PDim)
+const OP& OP::time(const OP& a, const OP& b)
 {
+	_PDim=(a._PDim);
 	
 	if(_PDim.at("positive")!=a._PDim.at("positive")|_PDim.at("negative")!=a._PDim.at("negative"))
 	{
@@ -439,10 +439,94 @@ _PDim(a._PDim)
 	{
 		auto ita=a._PMat.find(b._PRL.at(itb->first));
 		if(ita!=a._PMat.end())
-			_PMat.insert(itb->first, ita->second*itb->second);
+			_PMat.insert(pair<string, MatrixXd>(itb->first, ita->second*itb->second));
 	}
 	for(auto itb=b._PRL.begin(); itb!=b._PRL.end(); ++itb)
 	{
-		_PRL.insert(itb->first, a._PRL.at(it->second));
+		_PRL.insert(pair<string, string>(itb->first, a._PRL.at(itb->second)));
 	}
+	return *this;
+}
+
+
+
+
+
+
+const OP OP::operator*(const OP& a)const
+{
+	OP b;
+	b.time(*this, a);
+	return b;
+}
+	
+
+
+
+
+
+
+const OP& OP::time(const double& d)
+{
+	for(auto it=_PMat.begin(); it!=_PMat.end();++it)
+		it->second*=d;
+
+	return *this;
+}
+	
+
+
+const OP OP::operator*(const double& d)const
+{
+	OP temp(*this);
+	return temp.time(d);
+}
+
+
+
+const OP operator*(const double& d, const OP& a)
+{
+	return a*d;
+}
+
+
+
+
+void OP::save(ofstream& outfile)const
+{
+	for(auto it=_PRL.begin(); it!=_PRL.end(); ++it)
+	{
+		outfile<<it->first<<"\t"<<it->second<<endl;
+	}
+
+	for(auto it=_PDim.begin(); it!=_PDim.end(); ++it)
+	{
+		outfile<<it->first<<"\t"<<endl;
+	}
+
+	outfile.precision(20);
+
+	for(auto it=_PMat.begin(); it!=_PMat.end();++it)
+	{
+		outfile<<it->first<<endl
+			<<it->second<<endl;
+	}
+}
+
+
+
+
+
+void OP::read(ifstream& infile)
+{
+	_PRL.clear();
+	_PDim.clear();
+	_PMat.clear();
+
+
+	string Rname, Lname;
+	int Dim;
+
+	infile>>Rname>>Lname;
+	_PRL.insert(pair<string, string>(Rname, Lname));
 }

@@ -14,7 +14,8 @@ void test()
 
 	//hehe.add(haha);
 	//hehe.show();
-	OP heha(hehe+haha);
+	OP heha(hehe*haha*12);
+	
 
 	heha.show();
 }

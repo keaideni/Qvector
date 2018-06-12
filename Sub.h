@@ -10,12 +10,12 @@ class Sub
 {
 private:
         int _Orbital;
-        MatrixXd _System;
-        MatrixXd _SysA;
-        MatrixXd _SysAdag;
-        MatrixXd _SysEye;
-        MatrixXd _SysA1;
-        MatrixXd _SysAdag1;
+        OP _System;
+        OP _SysA;
+        OP _SysAdag;
+        OP _SysEye;
+        OP _SysA1;
+        OP _SysAdag1;
 
         void MatrixSave(const MatrixXd& A, ofstream& outfile)const;
         void MatrixRead(MatrixXd& A, ifstream& infile);

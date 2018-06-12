@@ -23,7 +23,7 @@ enum OpType{
 	Creation, Annihilation, Iden, SingmaZ, SingmaP, SingmaM, SingmaI
 };
 
-enum 
+ 
 class OP
 {
 private:
@@ -83,9 +83,13 @@ public:
 	const OP operator+(const OP& a)const;
 	const OP& operator=(const OP& a);
 	const OP& time(const OP& a, const OP& b);
+	const OP operator*(const OP& a)const;
+	const OP& time(const double& d);
+	const OP operator*(const double& d)const;
 
-
-
+	
+	void save(ofstream& outfile)const;
+	void read(ifstream& infile);
 
 
 
@@ -118,4 +122,5 @@ public:
 
 };
 
+const OP operator*(const double& d, const OP& a);
 #endif
