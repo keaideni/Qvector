@@ -8,16 +8,24 @@ void test()
 {
 	Parameter para;
 	OP haha(para, Annihilation);
-	haha.show();
+	//haha.show();
 	OP hehe(para, Creation);
-	hehe.show();
+	//hehe.show();
 
 	//hehe.add(haha);
 	//hehe.show();
 	OP heha(hehe*haha*12);
-	
+        	
 
 	heha.show();
+
+        ofstream outfile("heha");
+        heha.save(outfile);
+
+        ifstream infile("heha");
+        OP heheha;
+        heheha.read(infile);
+        heheha.show();
 }
 
 

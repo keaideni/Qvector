@@ -7,11 +7,13 @@
 class Parameter
 {
 private:
-        double _gr, _gcr, _Jr, _Jcr;
+        double _omega0, _omegaq,_gr, _gcr, _Jr, _Jcr;
         int _D;
         int _LatticeSize;
         int _nmax;
 public:
+        const double& omega0()const{return _omega0;};
+        const double& omegaq()const{return _omegaq;};
         const double& gr()const{return _gr;};
         const double& gcr()const{return _gcr;};
         const double& Jr()const{return _Jr;};
@@ -35,7 +37,8 @@ public:
                 }
 
                 std::string temp;
-                infile>>temp>>_nmax>>temp>>_D>>temp>>_LatticeSize>>temp>>_gr>>temp>>_gcr
+                infile>>temp>>_nmax>>temp>>_D>>temp>>_LatticeSize>>temp>>_omega0>>
+                        temp>>_omegaq>>temp>>_gr>>temp>>_gcr
                 >>temp>>_Jr>>temp>>_Jcr;
         };
         

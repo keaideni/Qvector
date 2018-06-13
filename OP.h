@@ -20,7 +20,7 @@
 using namespace std;
 using namespace Eigen;
 enum OpType{
-	Creation, Annihilation, Iden, SingmaZ, SingmaP, SingmaM, SingmaI
+	Creation, Annihilation, Iden, SigmaZ, SigmaP, SigmaM, SigmaI
 };
 
  
@@ -46,7 +46,6 @@ private:
 		}
 	}
 	
-	const OP& Kron(const OP& a, const OP& b);
 	const bool Matexist(const OP& a, const string& b);//whther b is exist or not.
 public:
 	const unordered_map<string, MatrixXd>& PMat()const{
@@ -77,6 +76,7 @@ public:
 	OP(){
 
 	};
+	const OP& Kron(const OP& a, const OP& b);
 
 	const OP& add(const OP& a);
 
