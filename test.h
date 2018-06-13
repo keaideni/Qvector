@@ -1,31 +1,12 @@
 #ifndef TEST_H
 #define TEST_H
 
-#include "OP.h"
+#include "Sub.h"
 
-void test();
-void test()
+void test(const Parameter& para);
+void test(const Parameter& para)
 {
-	Parameter para;
-	OP haha(para, Annihilation);
-	//haha.show();
-	OP hehe(para, Creation);
-	//hehe.show();
-
-	//hehe.add(haha);
-	//hehe.show();
-	OP heha(hehe*haha*12);
-        	
-
-	heha.show();
-
-        ofstream outfile("heha");
-        heha.save(outfile);
-
-        ifstream infile("heha");
-        OP heheha;
-        heheha.read(infile);
-        heheha.show();
+        Sub haha(para, 1);
 }
 
 

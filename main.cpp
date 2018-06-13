@@ -3,15 +3,18 @@
 //#include "Calcu.h"
 
 
-//int Sub::nmax;
+int Sub::nmax;
 
 int main(void)
 {
-	test();
+	//test();
 
-/*        Parameter para;
+        Parameter para;
         Sub::nmax=para.nmax();
-        DMRG haha(para);
+        test(para);
+
+
+        /*DMRG haha(para);
         ofstream outfile("./result/Result");
         outfile.precision(20);
         outfile<<"gr= "<<para.gr()<<" ,gcr= "<<para.gcr()<<" ,Jr= "<<para.Jr()

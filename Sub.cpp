@@ -10,7 +10,7 @@ string itos(const int& i)
 
 
 Sub::Sub(const Parameter& para, const int& orbital):
-_Orbital(orbital), 
+_Orbital(orbital) 
 {
        OP a(para, Creation), adag(para, Annihilation), iden(para, Iden);
        OP sigmaz(para, SigmaZ), sigmap(para, SigmaP), sigmam(para, SigmaM);
@@ -21,6 +21,13 @@ _Orbital(orbital),
        _SysEye.Kron(iden, sigmai);
        _SysA1.Kron(a, sigmai);
        _SysAdag1.Kron(adag, sigmai);
+
+
+       OP SysSigmaZ(_SysEye, sigmaz), SysSigmap(_SysEye, sigmap), SysSigmam(_SysEye, sigmam);
+
+       _System=_SysAdag*_SysA*para.omega0()+SysSigmap*SysSigmam*para.omegaq()
+               +para.gr()*(_SysAdag*SysSigmam+SysSigmap*_SysA)
+               +para.gcr()*(_SysAdag*SysSigmap+SysSigmam*_SysA);
 
 }
 
@@ -114,7 +121,7 @@ void Sub::Read(const int& orbital)
 
         infile.close();
 
-}
+}*/
 
 
 
@@ -122,15 +129,21 @@ void Sub::Show()const
 {
         cout<<"The site of Sub block is "<<_Orbital<<endl;
         cout<<"The System:"<<endl;
-        cout<<_System<<endl;//.rows()<<"X"<<_System.cols()<<endl;
+       
+        _System.show();
         cout<<"The SysA:"<<endl;
-        cout<<_SysA.rows()<<"X"<<_SysA.cols()<<endl;
+        _SysA.show();
+        //cout<<_SysA.rows()<<"X"<<_SysA.cols()<<endl;
         cout<<"The SysAdag:"<<endl;
-        cout<<_SysAdag.rows()<<"X"<<_SysAdag.cols()<<endl;
+        _SysAdag.show();
+        //cout<<_SysAdag.rows()<<"X"<<_SysAdag.cols()<<endl;
         cout<<"The SysA1:"<<endl;
-        cout<<_SysA1.rows()<<"X"<<_SysA1.cols()<<endl;
+        _SysA1.show();
+        //cout<<_SysA1.rows()<<"X"<<_SysA1.cols()<<endl;
         cout<<"The SysAdag1:"<<endl;
-        cout<<_SysAdag1.rows()<<"X"<<_SysAdag1.cols()<<endl;
+        _SysAdag1.show();
+        //cout<<_SysAdag1.rows()<<"X"<<_SysAdag1.cols()<<endl;
         cout<<"The SysEye:"<<endl;
-        cout<<_SysEye.rows()<<"X"<<_SysEye.cols()<<endl;
-}*/
+        _SysEye.show();
+        //cout<<_SysEye.rows()<<"X"<<_SysEye.cols()<<endl;
+}

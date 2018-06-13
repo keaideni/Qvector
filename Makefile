@@ -19,15 +19,15 @@ LIBSPECTRA = -I/home/keaideni/WORK/Lib/spectra/include/ -I/home/keaideni/WORK/Li
 
 
 
-obj=main.o OP.o #Sub.o SingleSub.o QWave.o Super.o DMRG.o
+obj=main.o OP.o Sub.o #SingleSub.o QWave.o Super.o DMRG.o
 main:$(obj)
 	$(CCCOM) -o main $(obj)  $(LIBSPECTRA)
 main.o:main.cpp  test.h #DMRG.h Calcu.h
 	$(CCCOM) -c main.cpp -O2 $(LIBSPECTRA)
 OP.o:OP.cpp OP.h
 	$(CCCOM) -c OP.cpp -O2 $(LIBSPECTRA)
-#Sub.o:Sub.cpp Sub.h Parameter.h
-#	$(CCCOM) -c Sub.cpp -O2 $(LIBSPECTRA)
+Sub.o:Sub.cpp Sub.h Parameter.h
+	$(CCCOM) -c Sub.cpp -O2 $(LIBSPECTRA)
 #SingleSub.o:SingleSub.cpp SingleSub.h Parameter.h
 #	$(CCCOM) -c SingleSub.cpp -O2 $(LIBSPECTRA)
 #QWave.o:QWave.cpp QWave.h
