@@ -164,6 +164,9 @@ OP::OP(const Parameter& para, const OpType& type)
 
 const OP& OP::Kron(const OP& a, const OP& b)
 {
+        _PRL.clear();
+        _PDim.clear();
+        _PMat.clear();
 	if(a._PRL.at("positive")==b._PRL.at("positive"))
 	{
 		_PRL.insert(pair<string, string>("positive", "positive"));

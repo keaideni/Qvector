@@ -23,7 +23,7 @@ _Orbital(orbital)
        _SysAdag1.Kron(adag, sigmai);
 
 
-       OP SysSigmaZ(_SysEye, sigmaz), SysSigmap(_SysEye, sigmap), SysSigmam(_SysEye, sigmam);
+       OP SysSigmaZ(iden, sigmaz), SysSigmap(iden, sigmap), SysSigmam(iden, sigmam);
 
        _System=_SysAdag*_SysA*para.omega0()+SysSigmap*SysSigmam*para.omegaq()
                +para.gr()*(_SysAdag*SysSigmam+SysSigmap*_SysA)
@@ -32,22 +32,49 @@ _Orbital(orbital)
 }
 
 
-/*Sub::Sub(const Parameter& para, const Sub& SubL, const Sub& SubR, const int& orbital):
-_Orbital(orbital)
+Sub::Sub(const Parameter& para, const Sub& SubL, const Sub& SubR, const int& orbital):
+_Orbital(orbital),
+_SysA(SubL._SysEye, SubR._SysA),
+_SysAdag(SubL._SysEye, SubR._SysAdag),
+_SysEye(SubL._SysEye, SubR._SysEye),
+_SysA1(SubL._SysA1, SubR._SysEye),
+_SysAdag1(SubL._SysAdag1, SubR._SysEye),
+_System(SubL._System, SubR._SysEye)
 {
-        Kron(_System, SubL.System(), SubR.SysEye());MatrixXd temp;
-        Kron(temp, SubL.SysEye(), SubR.System());_System+=temp;
-        Kron(temp, SubL.SysAdag(), SubR.SysA1());temp*=para.Jr();temp*=-1;_System+=temp;
-        Kron(temp, SubL.SysA(), SubR.SysAdag1());temp*=para.Jr();temp*=-1;_System+=temp;
-        Kron(temp, SubL.SysAdag(), SubR.SysAdag1());temp*=para.Jcr();temp*=-1;_System+=temp;
-        Kron(temp, SubL.SysA(), SubR.SysA1());temp*=para.Jcr();temp*=-1;_System+=temp;
+        OP temp;
+        temp.Kron(SubL._SysEye, SubR._System);
+        
 
-        Kron(_SysA, SubL.SysEye(), SubR.SysA());
-        Kron(_SysAdag, SubL.SysEye(), SubR.SysAdag());
-        Kron(_SysA1, SubL.SysA1(), SubR.SysEye());
-        Kron(_SysAdag1, SubL.SysAdag1(), SubR.SysEye());
+        _System.add(temp);
 
-        Kron(_SysEye, SubL.SysEye(), SubR.SysEye());
+        temp.Kron(SubL._SysAdag, SubR._SysA1);
+        _System.add(temp*para.gr());
+
+        temp.Kron(SubL._SysA, SubR._SysAdag1);
+        _System.add(temp*para.gr());
+
+        temp.Kron(SubL._SysAdag, SubR._SysAdag1);
+        _System.add(temp*para.gcr());
+
+        temp.Kron(SubL._SysA, SubR._SysA1);
+        _System.add(temp*para.gcr());
+
+        
+
+        temp.Kron(SubL._SysAdag1, SubR._SysA);
+        _System.add(temp*para.gr());
+
+        temp.Kron(SubL._SysA1, SubR._SysAdag);
+        _System.add(temp*para.gr());
+
+        temp.Kron(SubL._SysAdag1, SubR._SysAdag);
+        _System.add(temp*para.gcr());
+
+        temp.Kron(SubL._SysA1, SubR._SysA);
+        _System.add(temp*para.gcr());
+
+        //_System=temp.Kron(SubL._System, SubR._SysEye);//+temp.Kron(SubL._SysEye, SubR._System)+para.gr()*temp.Kron(SubL._SysAdag, SubR._SysA1)+para.gr()*temp.Kron(SubL._SysA, SubR._SysAdag1)+para.gcr()*temp.Kron(SubL._SysAdag, SubR._SysAdag1)+para.gcr()*temp.Kron(SubL._SysA, SubR._SysA1)+para.gr()*temp.Kron(SubL._SysAdag1, SubR._SysA)+para.gr()*temp.Kron(SubL._SysA1, SubR._SysAdag)+para.gcr()*temp.Kron(SubL._SysAdag1, SubR._SysAdag)+para.gcr()*temp.Kron(SubL._SysA1, SubR._SysA);
+
 }
 
 
@@ -66,7 +93,7 @@ const Sub& Sub::operator=(const Sub& a)
 
 
 
-
+/*
 void Sub::Trunc(const MatrixXd& truncU)
 {
         
@@ -80,7 +107,7 @@ void Sub::Trunc(const MatrixXd& truncU)
         _SysA1=truncU.adjoint()*_SysA1*truncU;
         _SysAdag1=truncU.adjoint()*_SysAdag1*truncU;
 }
-
+*/
 
 void Sub::Save()const
 {
@@ -89,12 +116,12 @@ void Sub::Save()const
 
         ofstream outfile(filename);
         outfile<<_Orbital<<endl;
-        MatrixSave(_System, outfile);
-        MatrixSave(_SysA, outfile);
-        MatrixSave(_SysAdag, outfile);
-        MatrixSave(_SysA1, outfile);
-        MatrixSave(_SysAdag1, outfile);
-        MatrixSave(_SysEye, outfile);
+        _System.save(outfile);
+        _SysA.save(outfile);
+        _SysAdag.save(outfile);
+        _SysA1.save(outfile);
+        _SysAdag1.save(outfile);
+        _SysEye.save(outfile);
         outfile.close();
 }
 
@@ -112,38 +139,33 @@ void Sub::Read(const int& orbital)
                 exit(true);
         }
         infile>>_Orbital;
-        MatrixRead(_System, infile);
-        MatrixRead(_SysA, infile);
-        MatrixRead(_SysAdag, infile);
-        MatrixRead(_SysA1, infile);
-        MatrixRead(_SysAdag1, infile);
-        MatrixRead(_SysEye, infile);
+        _System.read(infile);
+        _SysA.read(infile);
+        _SysAdag.read(infile);
+        _SysA1.read(infile);
+        _SysAdag1.read(infile);
+        _SysEye.read(infile);
 
         infile.close();
 
-}*/
+}
 
 
 
 void Sub::Show()const
 {
         cout<<"The site of Sub block is "<<_Orbital<<endl;
-        cout<<"The System:"<<endl;
+        //cout<<"The System:"<<endl;
        
         _System.show();
         cout<<"The SysA:"<<endl;
         _SysA.show();
-        //cout<<_SysA.rows()<<"X"<<_SysA.cols()<<endl;
         cout<<"The SysAdag:"<<endl;
         _SysAdag.show();
-        //cout<<_SysAdag.rows()<<"X"<<_SysAdag.cols()<<endl;
         cout<<"The SysA1:"<<endl;
         _SysA1.show();
-        //cout<<_SysA1.rows()<<"X"<<_SysA1.cols()<<endl;
         cout<<"The SysAdag1:"<<endl;
         _SysAdag1.show();
-        //cout<<_SysAdag1.rows()<<"X"<<_SysAdag1.cols()<<endl;
         cout<<"The SysEye:"<<endl;
         _SysEye.show();
-        //cout<<_SysEye.rows()<<"X"<<_SysEye.cols()<<endl;
 }
