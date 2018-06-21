@@ -3,14 +3,14 @@
 //#include "Calcu.h"
 
 
-int Sub::nmax;
+//int Sub::nmax;
 
 int main(void)
 {
 	//test();
 
         Parameter para;
-        Sub::nmax=para.nmax();
+        //Sub::nmax=para.nmax();
         test(para);
 
 
