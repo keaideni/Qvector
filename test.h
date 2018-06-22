@@ -1,7 +1,7 @@
 #ifndef TEST_H
 #define TEST_H
 
-#include "SOP.h"
+#include "QWave.h"
 
 void test(const Parameter& para);
 void test(const Parameter& para)
@@ -23,8 +23,39 @@ void test(const Parameter& para)
         temp=hehe.SysA().PMat().at("negative")-heha.SysA().PMat().at("negative");
 
         //cout<<emp.sum()<<endl;*/
-        SOP haha(para, Creation);
-        haha.show();
+        SingleSub haha(para);
+        
+        Sub hehe(para, 1);
+
+        QWave wave(hehe, haha, haha, hehe);
+
+        vector<double> f;
+        wave.Wave2f(f, Positive);
+
+        VectorXd ff(MatrixXd::Random(f.size(), 1));
+
+        for(int i=0; i<f.size(); ++i)
+        {
+                f.at(i)=ff(i);
+        }
+
+        wave.f2Wave(f, Positive);
+
+        vector<double> fff;
+        wave.Wave2f(fff, Positive);
+        double sum(0);
+        for(int i=0; i<fff.size(); ++i)
+        {
+                sum+=abs(f.at(i)-fff.at(i));
+        }
+        cout<<sum<<endl<<f.at(2)<<endl<<fff.at(2)<<endl;
+        
+        QWave wave2(wave);
+        //wave.SysOPWave(hehe.System(), Positive);
+
+        wave2.Hamiltanian(hehe, haha, haha, hehe, wave, para, Positive);
+        QWave wave3(hehe, haha, haha, hehe, wave, para, Positive);
+        
 }
 
 

@@ -19,9 +19,6 @@
 
 using namespace std;
 using namespace Eigen;
-enum OpType{
-	Creation, Annihilation, Iden, SigmaZ, SigmaP, SigmaM, SigmaI
-};
 
  
 class OP

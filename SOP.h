@@ -15,9 +15,6 @@
 
 using namespace std;
 using namespace Eigen;
-enum SOPType{
-	Creation, Annihilation, Iden, SigmaZ, SigmaP, SigmaM, SigmaI
-};
 typedef SparseMatrix<double> SpMat;
  
 class SOP
@@ -28,22 +25,22 @@ private:
 	unordered_map<string, int> _PDim;
 	void MatrixKron(SpMat& ab, const SpMat& a, const SpMat& b)
         {
-        ab.setZero();
-        ab.resize(a.rows()*b.rows(), a.cols()*b.cols());
+                ab.setZero();
+                ab.resize(a.rows()*b.rows(), a.cols()*b.cols());
 
-        for (int k=0; k<a.outerSize(); ++k)
-                for(SpMat::InnerIterator it(a,k); it; ++it)
-                {
-                        for(int l=0; l<b.outerSize(); ++l)
+                for (int k=0; k<a.outerSize(); ++k)
+                        for(SpMat::InnerIterator it(a,k); it; ++it)
                         {
-                                for(SpMat::InnerIterator itt(b,l); itt; ++itt)
+                                for(int l=0; l<b.outerSize(); ++l)
                                 {
-                                        ab.insert(it.row()*b.rows()+itt.row(), 
-                                                it.col()*b.cols()+itt.col())
-                                        =it.value()*itt.value();
+                                        for(SpMat::InnerIterator itt(b,l); itt; ++itt)
+                                        {
+                                                ab.insert(it.row()*b.rows()+itt.row(), 
+                                                        it.col()*b.cols()+itt.col())
+                                                =it.value()*itt.value();
+                                        }
                                 }
                         }
-                };
         }
 
         void Block(SpMat& a, const SpMat& b, const int& startr, const int& startc)
@@ -52,7 +49,7 @@ private:
                 {
                         for(SpMat::InnerIterator it(b,k); it; ++it)
                         {
-                                a.inset(startr+it.row(), startc+it.col());
+                                a.insert(startr+it.row(), startc+it.col())=it.value();
                         }
                 }
         }
@@ -70,7 +67,7 @@ public:
 	return _PDim;
 	};
 
-	SOP(const Parameter& para, const SOPType& type);
+	SOP(const Parameter& para, const OpType& type);
 	SOP(const SOP& a, const SOP& b)
 	{
 		Kron(a, b);
@@ -116,10 +113,10 @@ public:
 		cout<<"THe negative => "<<_PDim.at("negative")<<endl;
 		cout<<"===========The matrix for different parity========="<<endl;
 		auto it=_PMat.find("positive");
-		if(it!=_PMat.end())cout<<"The positive => "<<endl<<_PMat.at("positive").rows()<<"X"<<_PMat.at("positive").cols()<<endl;
+		if(it!=_PMat.end())cout<<"The positive => "<<endl<<_PMat.at("positive").rows()<<"X"<<_PMat.at("positive").cols()<<endl<<_PMat.at("positive")<<endl;
 		auto itt=_PMat.find("negative");
 		if(itt!=_PMat.end())
-		cout<<"The negative => "<<endl<<_PMat.at("negative").rows()<<"X"<<_PMat.at("negative").cols()<<endl;
+		cout<<"The negative => "<<endl<<_PMat.at("negative").rows()<<"X"<<_PMat.at("negative").cols()<<endl<<_PMat.at("negative")<<endl;
 
 
 		

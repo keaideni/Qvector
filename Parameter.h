@@ -4,6 +4,9 @@
 #include<string>
 #include<iostream>
 
+enum OpType{
+	Creation, Annihilation, Iden, SigmaZ, SigmaP, SigmaM, SigmaI
+};
 class Parameter
 {
 private:

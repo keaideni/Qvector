@@ -7,7 +7,7 @@
 
 #include "SOP.h"
 
-SOP::SOP(const Parameter& para, const SOPType& type)
+SOP::SOP(const Parameter& para, const OpType& type)
 {
 	switch (type)
 	{
@@ -29,7 +29,7 @@ SOP::SOP(const Parameter& para, const SOPType& type)
 			for(int i=0; i<_PDim.at("negative"); ++i)
 			{
 				if(i+1<_PDim.at("positive"))
-				tempp.insert(i+1, i)=sqrt(2*(i+1));
+				tempn.insert(i+1, i)=sqrt(2*(i+1));
 			}
 
 			_PMat.insert(pair<string, SpMat>("positive", tempp));
@@ -54,7 +54,7 @@ SOP::SOP(const Parameter& para, const SOPType& type)
 			for(int i=0; i<_PDim.at("negative"); ++i)
 			{
 				if(i+1<_PDim.at("positive"))
-				tempp.insert(i, i)=sqrt(2*i+1);
+				tempn.insert(i, i)=sqrt(2*i+1);
 			}
 
 			_PMat.insert(pair<string, SpMat>("positive", tempp));
@@ -79,7 +79,7 @@ SOP::SOP(const Parameter& para, const SOPType& type)
 			for(int i=0; i<_PDim.at("negative"); ++i)
 			{
 				//if(i+1<_PDim.at("positive"))
-				tempp.insert(i, i)=1;
+				tempn.insert(i, i)=1;
 			}
 
 			_PMat.insert(pair<string, SpMat>("positive", tempp));
@@ -207,7 +207,7 @@ const SOP& SOP::Kron(const SOP& a, const SOP& b)
 				tell1=ita!=(a._PMat.end())&&(itb!=b._PMat.end());
 				if(tell1){
 				MatrixKron(temp, a._PMat.at("positive"), b._PMat.at("positive"));
-				Blick(tempp, temp, 0, 0);}
+				Block(tempp, temp, 0, 0);}
 			}
 
 			{
@@ -215,7 +215,7 @@ const SOP& SOP::Kron(const SOP& a, const SOP& b)
 				tell2=(ita!=a._PMat.end())&&(itb!=b._PMat.end());
 				if(tell2){
 				MatrixKron(temp, a._PMat.at("negative"), b._PMat.at("negative"));
-				tempp.BlockImpl(pp, pp, nn, nn)=temp;}
+				Block(tempp, temp, pp, pp);}
 			}
 			if(tell1|tell2)
 			_PMat.insert(pair<string, SpMat>("positive", tempp));
@@ -225,14 +225,14 @@ const SOP& SOP::Kron(const SOP& a, const SOP& b)
 				tell1=(ita!=a._PMat.end())&&(itb!=b._PMat.end());
 				if(tell1){
 				MatrixKron(temp, a._PMat.at("positive"), b._PMat.at("negative"));
-				tempn.BlockImpl(0,0, pn, pn)=temp;}
+				Block(tempn, temp, 0,0);}
 			}
 			{
 				auto ita=a._PMat.find("negative"), itb=b._PMat.find("positive");
 				tell2=(ita!=a._PMat.end())&&(itb!=b._PMat.end());
 				if(tell2){
 				MatrixKron(temp, a._PMat.at("negative"), b._PMat.at("positive"));
-				tempn.BlockImpl(pn, pn, np, np)=temp;}
+				Block(tempn, temp, pn, pn);}
 			}
 			if(tell1|tell2)
 			_PMat.insert(pair<string, SpMat>("negative", tempn));
@@ -244,14 +244,14 @@ const SOP& SOP::Kron(const SOP& a, const SOP& b)
 				tell1=(ita!=a._PMat.end())&&(itb!=b._PMat.end());
 				if(tell1){
 				MatrixKron(temp, a._PMat.at("negative"), b._PMat.at("negative"));
-				tempp.BlockImpl(0,pp, pp, nn)=temp;}
+				Block(tempp, temp, 0,pp);}
 			}
 			{
 				auto ita=a._PMat.find("positive"), itb=b._PMat.find("positive");
 				tell2=(ita!=a._PMat.end())&&(itb!=b._PMat.end());
 				if(tell2){
 				MatrixKron(temp, a._PMat.at("positive"), b._PMat.at("positive"));
-				tempp.BlockImpl(pp, 0, nn, pp)=temp;}
+				Block(tempp, temp, pp, 0);}
 			}
 			if(tell1|tell2)
 			_PMat.insert(pair<string, SpMat>("positive", tempp));
@@ -261,14 +261,14 @@ const SOP& SOP::Kron(const SOP& a, const SOP& b)
 				tell1=(ita!=a._PMat.end())&&(itb!=b._PMat.end());
 				if(tell1){
 				MatrixKron(temp, a._PMat.at("negative"), b._PMat.at("positive"));
-				tempn.BlockImpl(0,pn, pn, np)=temp;}
+				Block(tempn, temp, 0,pn);}
 			}
 			{
 				auto ita=a._PMat.find("positive"), itb=b._PMat.find("negative");
 				tell2=(ita!=a._PMat.end())&&(itb!=b._PMat.end());
 				if(tell2)
 				MatrixKron(temp, a._PMat.at("positive"), b._PMat.at("negative"));
-				tempn.BlockImpl(pn, 0, np, pn)=temp;
+				Block(tempn, temp, pn, 0);
 			}
 			if(tell1|tell2)
 			_PMat.insert(pair<string, SpMat>("negative", tempn));
@@ -285,14 +285,14 @@ const SOP& SOP::Kron(const SOP& a, const SOP& b)
 				tell1=ita!=a._PMat.end()&itb!=b._PMat.end();
 				if(tell1){
 				MatrixKron(temp, a._PMat.at("positive"), b._PMat.at("positive"));
-				tempp.BlockImpl(0,0, pn, pp)=temp;}
+				Block(tempp, temp, 0,0);}
 			}
 			{
 				auto ita=a._PMat.find("negative"), itb=b._PMat.find("negative");
 				tell2=ita!=a._PMat.end()&itb!=b._PMat.end();
 				if(tell2){
 				MatrixKron(temp, a._PMat.at("negative"), b._PMat.at("negative"));
-				tempp.BlockImpl(pn, pp, np, nn)=temp;}
+				Block(tempp, temp, pn, pp);}
 			}
 			
 			if(tell1|tell2)
@@ -303,7 +303,7 @@ const SOP& SOP::Kron(const SOP& a, const SOP& b)
 				tell1=ita!=a._PMat.end()&itb!=b._PMat.end();
 				if(tell1){
 				MatrixKron(temp, a._PMat.at("positive"), b._PMat.at("negative"));
-				tempn.BlockImpl(0,0, pp, pn)=temp;}
+				Block(tempn, temp, 0,0);}
 			}
 			{
 				
@@ -311,7 +311,7 @@ const SOP& SOP::Kron(const SOP& a, const SOP& b)
 				tell2=ita!=a._PMat.end()&itb!=b._PMat.end();
 				if(tell2){
 				MatrixKron(temp, a._PMat.at("negative"), b._PMat.at("positive"));
-				tempn.BlockImpl(pp, pn, nn, np)=temp;}
+				Block(tempn, temp, pp, pn);}
 			}
 
 			if(tell1|tell2)
@@ -324,14 +324,14 @@ const SOP& SOP::Kron(const SOP& a, const SOP& b)
 				tell1=ita!=a._PMat.end()&itb!=b._PMat.end();
 				if(tell1){
 				MatrixKron(temp, a._PMat.at("negative"), b._PMat.at("negative"));
-				tempp.BlockImpl(0,pp, pn, nn)=temp;}
+				Block(tempp, temp, 0,pp);}
 			}
 			{
 				auto ita=a._PMat.find("positive"), itb=b._PMat.find("positive");
 				tell2=ita!=a._PMat.end()&itb!=b._PMat.end();
 				if(tell2){
 				MatrixKron(temp, a._PMat.at("positive"), b._PMat.at("positive"));
-				tempp.BlockImpl(pn, 0, np, pp)=temp;}
+				Block(tempp, temp, pn, 0);}
 			}
 			if(tell1|tell2)
 			_PMat.insert(pair<string, SpMat>("positive", tempp));
@@ -342,7 +342,7 @@ const SOP& SOP::Kron(const SOP& a, const SOP& b)
 				tell1=ita!=a._PMat.end()&itb!=b._PMat.end();
 				if(tell1){
 				MatrixKron(temp, a._PMat.at("negative"), b._PMat.at("positive"));
-				tempn.BlockImpl(0,pn, pp, np)=temp;}
+				Block(tempn, temp, 0,pn);}
 			}
 
 			{
@@ -350,7 +350,7 @@ const SOP& SOP::Kron(const SOP& a, const SOP& b)
 				tell2=ita!=a._PMat.end()&itb!=b._PMat.end();
 				if(tell2){
 				MatrixKron(temp, a._PMat.at("positive"), b._PMat.at("negative"));
-				tempn.BlockImpl(pp, 0, nn, pn)=temp;}
+				Block(tempn, temp, pp, 0);}
 			}
 			if(tell1|tell2)
 			_PMat.insert(pair<string, SpMat>("negative", tempn));
