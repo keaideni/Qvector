@@ -54,7 +54,53 @@ _Dim(16)
 }
 
 
+//====================Trunc===========================================
+void QWave::SMENTruncL(OP& A, const int& D, const Parity& pari)const
+{
+        
+        int npari;
+        if(pari==Positive)npari=0;
+        else npari=1;
 
+        vector<map<string, int>> tempdim(4);//to store the dimension for sys(0)... Env(3) of different parity.
+        for(int i=0; i<16; ++i)
+        {
+                vector<string> temps(n2s(i));
+                for(int k=0; i<4; ++k)
+                {
+                        auto it=tempdim.at(k).find(temps.at(k));
+                        if(it==tempdim.at(k).end())
+                        {
+                                int tempd;
+                                switch (k)
+                                {
+                                        case 0:
+                                        {
+                                                tempd=_Dim.at(i).SDim;
+                                                break;
+                                        }
+                                        case 1:
+                                        {
+                                                tempd=_Dim.at(i).MDim;
+                                                break;
+                                        }
+                                        case 2:
+                                        {
+                                                tempd=_Dim.at(i).NDim;
+                                                break;
+                                        }
+                                        case 3:
+                                        {
+                                                tempd=_Dim.at(i).EDim;
+                                                break;
+                                        }
+                                }
+                                
+                                tempdim.at(k).insert(pair<string, int>(temps.at(k), tempd));
+                        }
+                }
+        }
+}
 
 
 

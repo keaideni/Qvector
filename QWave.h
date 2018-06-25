@@ -92,11 +92,11 @@ public:
         void Hamiltanian(const Sub& Sys, const SingleSub& M, const SingleSub& n, const Sub& Env, const QWave& wave, const Parameter& para, const Parity& pari);
         QWave(const Sub& Sys, const SingleSub& M, const SingleSub& n, const Sub& Env, const QWave& wave, const Parameter& para, const Parity& pari);
 
-        /*void SMEN2Wave(const MatrixXd& A);
-        void SMEN(MatrixXd& A)const;
-        void NSME(MatrixXd& A)const;
-        void TruncL(MatrixXd& truncU, const int& D)const;
-*/
+
+        //======== Trunc=================================
+        void SMENTruncL(OP& A, const int& D, const Parity& pari)const;
+        //void NSME(MatrixXd& A)const;
+
 
         
 

@@ -115,7 +115,7 @@ public:
 		
 	}
 
-	
+        friend class QWave;	
 
 };
 
