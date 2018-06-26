@@ -16,9 +16,13 @@
 #include<sstream>
 #include<string>
 #include <unordered_map>
-
+#include<Eigen/Eigenvalues>
 using namespace std;
 using namespace Eigen;
+enum Parity
+{
+        Positive, Negative
+};
 
  
 class OP
@@ -87,7 +91,9 @@ public:
 	
 	void save(ofstream& outfile)const;
 	void read(ifstream& infile);
-
+        
+        void getDenL(const OP& A, const int& D);//OP must be a wave OP in QWave.h.
+        void genDenR(const OP& A, const int& D);
 
 
 	void show()const

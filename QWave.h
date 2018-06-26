@@ -9,10 +9,6 @@ struct dimension
         int SDim, EDim, MDim, NDim;
 };
 
-enum Parity
-{
-        Positive, Negative
-};
 
 class QWave
 {
@@ -75,48 +71,12 @@ private:
 
         void add(const QWave& wavei, const Parity& pari);
 //=====================================================
-        const vector<unordered_map<string, int>> DimOES()const //dimension of parity for each site.
-        {
-                vector<unordered_map<string, int>> tempdim(4);//to store the dimension for sys(0)... Env(3) of different parity.
-                for(int i=0; i<16; ++i)
-                {
-                        vector<string> temps(n2s(i));
-                        for(int k=0; i<4; ++k)
-                        {
-                                auto it=tempdim.at(k).find(temps.at(k));
-                                if(it==tempdim.at(k).end())
-                                {
-                                        int tempd;
-                                        switch (k)
-                                        {
-                                                case 0:
-                                                {
-                                                        tempd=_Dim.at(i).SDim;
-                                                        break;
-                                                }
-                                                case 1:
-                                                {
-                                                        tempd=_Dim.at(i).MDim;
-                                                        break;
-                                                }
-                                                case 2:
-                                                {
-                                                        tempd=_Dim.at(i).NDim;
-                                                        break;
-                                                }
-                                                case 3:
-                                                {
-                                                        tempd=_Dim.at(i).EDim;
-                                                        break;
-                                                }
-                                        }
-                                        tempdim.at(k).insert(pair<string, int>(temps.at(k), tempd));
-                                }
-                        }
-                }
-                return tempdim;
-        }
+        const vector<unordered_map<string, int>> DimOES()const;//dimension of parity for each site.
+        
 
+        const string QAdd(const string& a, const string& b)const;
+
+        const string OppS(const string& s)const;//return the opposite of s.
 
 public:
 
@@ -137,6 +97,9 @@ public:
 
         //======== Trunc=================================
         void Wave2SMEN(OP& A, const Parity& pari)const;
+        void Wave2NSME(OP& A, const Parity& pari)const;
+        void NSME2Wave(const OP& A, const Parity& pari);
+        void SMEN2Wave(const OP& A, const Parity& pari);
         //void NSME(MatrixXd& A)const;
 
 

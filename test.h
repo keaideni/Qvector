@@ -40,21 +40,28 @@ void test(const Parameter& para)
         }
 
         wave.f2Wave(f, Positive);
+        QWave wave1(wave);
 
+        OP testOP;
+
+        wave.Wave2SMEN(testOP, Positive);
+        
+        wave1.SMEN2Wave(testOP, Positive);
         vector<double> fff;
-        wave.Wave2f(fff, Positive);
+        wave1.Wave2f(fff, Positive);
         double sum(0);
         for(int i=0; i<fff.size(); ++i)
         {
                 sum+=abs(f.at(i)-fff.at(i));
         }
         cout<<sum<<endl<<f.at(2)<<endl<<fff.at(2)<<endl;
+        //cout<<f.size()<<endl<<fff.size()<<endl;
         
         QWave wave2(wave);
         //wave.SysOPWave(hehe.System(), Positive);
 
-        wave2.Hamiltanian(hehe, haha, haha, hehe, wave, para, Positive);
-        QWave wave3(hehe, haha, haha, hehe, wave, para, Positive);
+        /*wave2.Hamiltanian(hehe, haha, haha, hehe, wave, para, Positive);
+        QWave wave3(hehe, haha, haha, hehe, wave, para, Positive);*/
         
 }
 
