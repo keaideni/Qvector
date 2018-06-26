@@ -11,6 +11,7 @@ struct Eigstruct
 };
 
 
+const string QAdd(const string& a, const string& b);
 
 bool comp(const Eigstruct& a, const Eigstruct& b);
 
@@ -54,56 +55,66 @@ _Dim(16)
 }
 
 
-//====================Trunc===========================================
-void QWave::SMENTruncL(OP& A, const int& D, const Parity& pari)const
+//====================Transform===========================================
+void QWave::Wave2SMEN(OP& A, const Parity& pari)const
 {
         
         int npari;
         if(pari==Positive)npari=0;
         else npari=1;
-
-        vector<map<string, int>> tempdim(4);//to store the dimension for sys(0)... Env(3) of different parity.
+        vector<unordered_map<string, int>> dimoes(DimOES());
+        MatrixXd temp;
+        A._PMat.insert(pair<string, mat>("positive", temp));
+        A._PMat.insert(pair<string, mat>("negative", temp));
         for(int i=0; i<16; ++i)
         {
                 vector<string> temps(n2s(i));
-                for(int k=0; i<4; ++k)
+                int nnpari((i/8+(i%8)/4+((i%8)%4)/2+((i%8)%4)%2)/2);
+                if(nnpari==npari)
                 {
-                        auto it=tempdim.at(k).find(temps.at(k));
-                        if(it==tempdim.at(k).end())
-                        {
-                                int tempd;
-                                switch (k)
-                                {
-                                        case 0:
-                                        {
-                                                tempd=_Dim.at(i).SDim;
-                                                break;
-                                        }
-                                        case 1:
-                                        {
-                                                tempd=_Dim.at(i).MDim;
-                                                break;
-                                        }
-                                        case 2:
-                                        {
-                                                tempd=_Dim.at(i).NDim;
-                                                break;
-                                        }
-                                        case 3:
-                                        {
-                                                tempd=_Dim.at(i).EDim;
-                                                break;
-                                        }
-                                }
-                                
-                                tempdim.at(k).insert(pair<string, int>(temps.at(k), tempd));
-                        }
+                       string PR(QAdd(temps.at(2), temps.at(3)));
+                       string RL(QAdd(temps.at(0), temps.at(1)));
+                       auto it=A._PRL.find(PR);
+                       if(it==A._PRL.end())
+                               A._PRL.insert(pair<string, string>(PR, PL));
+                       for(int ie=0; ie<_Dim.at(i).EDim; ++ie)
+                       {
+                               for(int in=0; in<_Dim.at(i).NDim; ++in)
+                               {
+                                       for(int is=0; is<_Dim.at(i).SDim; ++is)
+                                       {
+                                               for(int im=0; im<_Dim.at(i).MDim; ++im)
+                                               {
+                                                       int startL, startR;
+                                                        if(temps.at(3)=="positive")
+                                                                startR=0;
+                                                        else startR=dimoes.at(3).at(temps.at(3))*dimoes.at(2).at((temps.at(2)));
+                                                        if(temps.at(0)=="positive")
+                                                                startL=0;
+                                                        else startL=dimoes.at(0).at(temps.at(0))*dimoes.at(1).at(temps.at(1));
+                                                        _PMat.at(PR)(startL+is*_Dim.at(i).MDim+im, startR+ie*_Dim.at(i).NDim+in)=_Wave.at(im).at(in)(is, ie);
+                                               }
+                                       }
+                               }
+                       }
                 }
-        }
+        } 
 }
 
 
 
+const string QAdd(const string& a, const string& b)
+{
+                        double tellp1(s2n(2*(temps.at(2)-1./2))), tellp2(2*(temps.at(3)-1./2));
+                        int tellP((int)(tellp1*tellp2));
+                        if(tellP==1)
+                        {
+                                return "positive";
+                        }else
+                        {
+                                return "negative";
+                        }
+}
 
 
 
