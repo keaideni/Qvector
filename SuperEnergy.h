@@ -22,7 +22,7 @@ public:
 
 
         //SuperEnergy(){};
-        SuperEnergy(Parameter&para,Super& sup):
+        SuperEnergy(Parameter&para,Super& sup, const Parity& pari):
         wave(sup.Wave())
         {
                 
@@ -35,8 +35,11 @@ public:
                 {
 			//if(eigs.eigenvalues()(0)<eigs.eigenvalues()(1))
 			//{
+                        vector<double> f;
+                        for(int i=0; i<eigs.eigenvectors(1).col(0).size(); ++i)
+                                f.push_back(eigs.eigenvectors(1)(i, 0));
 
-				wave.f2Wave(eigs.eigenvectors(1).col(0));
+				wave.f2Wave(f, pari);
 			//}else
 			//{
 				//wave.f2Wave(eigs.eigenvectors(2).col(1));
@@ -52,7 +55,7 @@ public:
         
 
         
-        SuperEnergy(Parameter&para,Super& sup, const MatrixXd& initwave):
+/*        SuperEnergy(Parameter&para,Super& sup, const MatrixXd& initwave):
         wave(sup.Wave())
         {
                 
@@ -183,7 +186,7 @@ public:
                 }
 
                 
-        };
+        };*/
         
 };
 

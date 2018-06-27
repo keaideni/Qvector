@@ -108,14 +108,17 @@ public:
 
         void Wave2f(vector<double>& f, const Parity& pari)const;
         void f2Wave(const vector<double>& f, const Parity& pari);
+
+        int waveDim(const Parity& pari)const;
 //        void f2Wave(const VectorXd& f);
-/*
+
         const QWave& operator=(const QWave& a)
         {
+                _Dim=a._Dim;
                 _Wave=a.Wave();
                 return *this;
         }
-        void Norm();
+        /*void Norm();
         void Show()const;*/
         /*void Random()
         {

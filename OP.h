@@ -92,8 +92,9 @@ public:
 	void save(ofstream& outfile)const;
 	void read(ifstream& infile);
         
-        void getDenL(const OP& A, const int& D);//OP must be a wave OP in QWave.h.
-        void genDenR(const OP& A, const int& D);
+        void DenTruncL(const OP& A, const int& D, double& err);//OP must be a wave OP in QWave.h.
+        void DenTruncR(const OP& A, const int& D, double& err);
+        void TruncU(const OP& A);
 
 
 	void show()const
@@ -112,10 +113,10 @@ public:
 		cout<<"THe negative => "<<_PDim.at("negative")<<endl;
 		cout<<"===========The matrix for different parity========="<<endl;
 		auto it=_PMat.find("positive");
-		if(it!=_PMat.end())cout<<"The positive => "<<endl<<_PMat.at("positive").rows()<<"X"<<_PMat.at("positive").cols()<<endl;
+		if(it!=_PMat.end())cout<<"The positive => "<<endl<<_PMat.at("positive")<<endl;//.rows()<<"X"<<_PMat.at("positive").cols()<<endl;
 		auto itt=_PMat.find("negative");
 		if(itt!=_PMat.end())
-		cout<<"The negative => "<<endl<<_PMat.at("negative").rows()<<"X"<<_PMat.at("negative").cols()<<endl;
+		cout<<"The negative => "<<endl<<_PMat.at("negative")<<endl;//.rows()<<"X"<<_PMat.at("negative").cols()<<endl;
 
 
 		

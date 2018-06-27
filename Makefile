@@ -19,7 +19,7 @@ LIBSPECTRA = -I/home/keaideni/WORK/Lib/spectra/include/ -I/home/keaideni/WORK/Li
 
 
 
-obj=main.o OP.o SOP.o Sub.o QWave.o #Super.o DMRG.o
+obj=main.o OP.o SOP.o Sub.o QWave.o DMRG.o
 main:$(obj)
 	$(CCCOM) -o main $(obj)  $(LIBSPECTRA)
 main.o:main.cpp  test.h SingleSub.h #DMRG.h Calcu.h
@@ -32,10 +32,8 @@ Sub.o:Sub.cpp Sub.h Parameter.h
 	$(CCCOM) -c Sub.cpp -O2 $(LIBSPECTRA)
 QWave.o:QWave.cpp QWave.h
 	$(CCCOM) -c QWave.cpp -O2 $(LIBSPECTRA)
-#Super.o:Super.cpp Super.h
-#	$(CCCOM) -c Super.cpp -O2 $(LIBSPECTRA)
-#DMRG.o:DMRG.cpp DMRG.h SuperEnergy.h Trunc.h
-#	$(CCCOM) -c DMRG.cpp -O2 $(LIBSPECTRA)
+DMRG.o:DMRG.cpp DMRG.h SuperEnergy.h 
+	$(CCCOM) -c DMRG.cpp -O2 $(LIBSPECTRA)
 .PHONY:clean
 clean:
 	rm -f main $(obj)

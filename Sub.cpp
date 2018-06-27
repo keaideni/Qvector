@@ -12,11 +12,11 @@ string itos(const int& i)
 Sub::Sub(const Parameter& para, const int& orbital):
 _Orbital(orbital) 
 {
-       OP a(para, Creation), adag(para, Annihilation), iden(para, Iden);
+       OP a(para, Annihilation), adag(para, Creation), iden(para, Iden);
        OP sigmaz(para, SigmaZ), sigmap(para, SigmaP), sigmam(para, SigmaM);
        OP sigmai(para, SigmaI);
 
-       _SysA.Kron(a, sigmai);
+       _SysA.Kron(a, sigmai);//_SysA.show();exit(true);
        _SysAdag.Kron(adag, sigmai);
        _SysEye.Kron(iden, sigmai);
        _SysA1.Kron(a, sigmai);
@@ -93,21 +93,21 @@ const Sub& Sub::operator=(const Sub& a)
 
 
 
-/*
-void Sub::Trunc(const MatrixXd& truncU)
+
+void Sub::Trunc(const OP& truncU)
 {
         
-        //truncU.col(0)<<endl;
-        _System=truncU.adjoint()*_System*truncU;
         
-        _SysA=truncU.adjoint()*_SysA*truncU;
+        _System.TruncU(truncU);
+        
+        _SysA.TruncU(truncU);
 
-        _SysAdag=truncU.adjoint()*_SysAdag*truncU;
-        _SysEye=truncU.adjoint()*_SysEye*truncU;
-        _SysA1=truncU.adjoint()*_SysA1*truncU;
-        _SysAdag1=truncU.adjoint()*_SysAdag1*truncU;
+        _SysAdag.TruncU(truncU);
+        _SysEye.TruncU(truncU);
+        _SysA1.TruncU(truncU);
+        _SysAdag1.TruncU(truncU);
 }
-*/
+
 
 void Sub::Save()const
 {
@@ -156,7 +156,7 @@ void Sub::Show()const
 {
         cout<<"The site of Sub block is "<<_Orbital<<endl;
         //cout<<"The System:"<<endl;
-       
+        cout<<"The System:"<<endl; 
         _System.show();
         cout<<"The SysA:"<<endl;
         _SysA.show();

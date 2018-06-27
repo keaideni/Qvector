@@ -566,7 +566,7 @@ void OP::read(ifstream& infile)
 
 struct Eigstruct
 {
-        double lamda;
+        double lambda;
         string pari; 
         VectorXd state;
 };
@@ -578,7 +578,7 @@ bool comp(const Eigstruct& a, const Eigstruct& b)
         return a.lambda>b.lambda;
 }
 
-void OP::genDenL(const OP& A, const int& D)
+void OP::DenTruncL(const OP& A, const int& D, double& err)
 {
         _PRL.clear();
         _PMat.clear();
@@ -586,7 +586,7 @@ void OP::genDenL(const OP& A, const int& D)
         vector<Eigstruct> Denmat;
         for(auto it=A._PMat.begin(); it!=A._PMat.end(); ++it)
         {
-                _PRL.insert(pair<string, string>(A._PRL.at(it->first), A._PRL.at(it->first));
+                _PRL.insert(pair<string, string>(A._PRL.at(it->first), A._PRL.at(it->first)));
                 MatrixXd temp(it->second*it->second.transpose());
                 SelfAdjointEigenSolver<MatrixXd> es(temp);
                 for(int i=0; i<es.eigenvalues().size(); ++i)
@@ -611,13 +611,113 @@ void OP::genDenL(const OP& A, const int& D)
                 }
         }
 
-        for(int i=0; i<min; ++i)
+        for(auto it=_PDim.begin(); it!=_PDim.end(); ++it)
         {
-                auto it=_PMat.find(Denmat.at(i).pari);
-                if(it!=_PMat.end())
+                int matR(it->second);
+                int matL;
+                for(int i=0; i<min; ++i)
                 {
-
+                        if(Denmat.at(i).pari==it->first)
+                        {
+                                matL=Denmat.at(i).state.size();
+                                break;
+                        }
+                }
+                MatrixXd temp(matL, matR);
+                int order(0);
+                for(int i=0; i<min; ++i)
+                {
+                        if(Denmat.at(i).pari==it->first)
+                        {
+                                temp.col(order++)=Denmat.at(i).state;
+                        }
+                }
+                _PMat.insert(pair<string, MatrixXd>(it->first, temp));
+        }
+        double sum(0);
+        double sum1(0);
+        for(int i=0; i<Denmat.size(); ++i)
+        {
+                sum+=Denmat.at(i).lambda;
+                if(i<min)sum+=Denmat.at(i).lambda;
+        }
+        err=sum-sum1;
+        
+}
+void OP::DenTruncR(const OP& A, const int& D, double& err)
+{
+        _PRL.clear();
+        _PMat.clear();
+        _PDim.clear();
+        vector<Eigstruct> Denmat;
+        for(auto it=A._PMat.begin(); it!=A._PMat.end(); ++it)
+        {
+                _PRL.insert(pair<string, string>(A._PRL.at(it->first), A._PRL.at(it->first)));
+                MatrixXd temp(it->second.transpose()*it->second);
+                SelfAdjointEigenSolver<MatrixXd> es(temp);
+                for(int i=0; i<es.eigenvalues().size(); ++i)
+                {
+                        Eigstruct tempe={es.eigenvalues()(i), it->first, es.eigenvectors().col(i)};
+                        Denmat.push_back(tempe);
                 }
         }
+        sort(Denmat.begin(), Denmat.end(), comp);
+
+        int min(Denmat.size()<D?Denmat.size():D);
+
+        for(int i=0; i<min; ++i)
+        {
+                auto it=_PDim.find(Denmat.at(i).pari);
+                if(it!=_PDim.end())
+                {
+                        it->second+=1;
+                }else
+                {
+                        _PDim.insert(pair<string, int>(Denmat.at(i).pari, 1));
+                }
+        }
+
+        for(auto it=_PDim.begin(); it!=_PDim.end(); ++it)
+        {
+                int matR(it->second);
+                int matL;
+                for(int i=0; i<min; ++i)
+                {
+                        if(Denmat.at(i).pari==it->first)
+                        {
+                                matL=Denmat.at(i).state.size();
+                                break;
+                        }
+                }
+                MatrixXd temp(matL, matR);
+                int order(0);
+                for(int i=0; i<min; ++i)
+                {
+                        if(Denmat.at(i).pari==it->first)
+                        {
+                                temp.col(order++)=Denmat.at(i).state;
+                        }
+                }
+                _PMat.insert(pair<string, MatrixXd>(it->first, temp));
+        }
+        double sum(0);
+        double sum1(0);
+        for(int i=0; i<Denmat.size(); ++i)
+        {
+                sum+=Denmat.at(i).lambda;
+                if(i<min)sum+=Denmat.at(i).lambda;
+        }
+        err=sum-sum1;
         
+        
+}
+
+
+void OP::TruncU(const OP& A)
+{
+        _PDim=A._PDim;
+        for(auto it=_PRL.begin(); it!=_PRL.end(); ++it)
+        {
+                _PMat.at(it->first)=A._PMat.at(it->second).transpose()*_PMat.at(it->first)*A._PMat.at(it->first);
+        }
 }

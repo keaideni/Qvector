@@ -23,7 +23,7 @@ class SingleSub
          ~SingleSub(){};
          SingleSub(const Parameter& para)
         {
-                SOP a(para, Creation), adag(para, Annihilation), iden(para, Iden);
+                SOP a(para, Annihilation), adag(para, Creation), iden(para, Iden);
                 SOP sigmaz(para, SigmaZ), sigmap(para, SigmaP), sigmam(para, SigmaM);
                 SOP sigmai(para, SigmaI);
 
@@ -36,6 +36,7 @@ class SingleSub
                 _System=_SysAdag*_SysA*para.omega0()+SysSigmap*SysSigmam*para.omegaq()
                 +para.gr()*(_SysAdag*SysSigmam+SysSigmap*_SysA)
                 +para.gcr()*(_SysAdag*SysSigmap+SysSigmam*_SysA);
+
 
 }
          

@@ -6,15 +6,16 @@ class Super
 {
 private:
         double sigma_;
-        double Jr, Jcr;
+        //double Jr, Jcr;
         
         
         
         const Sub& Sys;
         const Sub& Env;
-        SingleSub m;
-        SingleSub n;
-
+        const SingleSub& m;
+        const SingleSub& n;
+        const Parameter& para;
+        const Parity& pari;
         QWave _Wave;
         
 
@@ -31,24 +32,40 @@ public:
         };
         const QWave& Wave()const{return _Wave;};
         int Dim;
-        Super(const Parameter& para, const Sub& _Sys, const Sub& _Env):
-        m(para),
-        n(para),
-        Jr(para.Jr()),
-        Jcr(para.Jcr()),
+        Super(const Parameter& _para, const Sub& _Sys, const SingleSub& _m, const SingleSub& _n, const Sub& _Env, const Parity& _pari):
+        para(_para),
+        m(_m),
+        n(_n),
         Sys(_Sys),
         Env(_Env),
-        _Wave(_Sys.SysEye().cols(),2*(para.nmax()+1),2*(para.nmax()+1), _Env.SysEye().rows()),
-        Dim(_Sys.SysEye().cols()*m.System().cols()*n.System().rows()*_Env.SysEye().rows())
+        _Wave(_Sys, _m, _n, _Env),
+        pari(_pari)
         {
-                
+               Dim=_Wave.waveDim(pari); 
         };
 
-        void f1tof2(double* f, double* g);
-        void f1tof2(const vector<double>& f, vector<double>& g);
+        void f1tof2(double* f, double* g)
+        {
+                vector<double> ff, gg;
+                for(int i=0; i<Dim; ++i)
+                {
+                        ff.push_back(f[i]);
+                }
+                f1tof2(ff,gg);
+                for(int i=0; i<Dim; ++i)
+                {
+                        g[i]=gg.at(i);
+                }
+        };
 
-        void OneIteration();
-
+        
+        void f1tof2(const vector<double>& f, vector<double>& g)
+        {
+                _Wave.f2Wave(f, pari);
+                QWave temp(Sys, m, n, Env, _Wave, para, pari);
+                _Wave=temp;
+                _Wave.Wave2f(g, pari);
+        };
 
 };
 

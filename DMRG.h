@@ -28,7 +28,7 @@ public:
 
         DMRG(Parameter& para);
 
-        void Initialize(const int& dir, const int& Gdir, const int& OS, const int& OE);
+        //void Initialize(const int& dir, const int& Gdir, const int& OS, const int& OE);
 
 
 
@@ -37,8 +37,7 @@ public:
         
         //================sweep======================
         void Sweep(Parameter& para, int& OS, int& OE);
-        void CalcuEnergy(Parameter& para, int& OS,
-         int& OE, const int& dir, const int& Gdir);
+        void CalcuEnergy(Parameter& para, int& OS, int& OE, const int& dir, const int& Gdir);
         //===========one site sweep===================
         //void OneSiteSweep(Parameter& para, int& OS, int& OE);
         

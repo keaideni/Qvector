@@ -147,10 +147,10 @@ void QWave::Wave2SMEN(OP& A, const Parity& pari)const
                                                         int startL, startR;
                                                         if(temps.at(3)=="positive")
                                                                 startR=0;
-                                                        else startR=dimoes.at(3).at(temps.at(3))*dimoes.at(2).at((temps.at(2)));
+                                                        else startR=dimoes.at(3).at(OppS(temps.at(3)))*dimoes.at(2).at(OppS(temps.at(2)));
                                                         if(temps.at(0)=="positive")
                                                                 startL=0;
-                                                        else startL=dimoes.at(0).at(temps.at(0))*dimoes.at(1).at(temps.at(1));
+                                                        else startL=dimoes.at(0).at(OppS(temps.at(0)))*dimoes.at(1).at(OppS(temps.at(1)));
                                                         //cout<<startL+is*_Dim.at(i).MDim+im<<endl<< startR+ie*_Dim.at(i).NDim+in<<endl;
                                                         A._PMat.at(PR)(startL+is*_Dim.at(i).MDim+im, startR+ie*_Dim.at(i).NDim+in)=_Wave.at(i).at(im).at(in)(is, ie);
                                                 }
@@ -186,10 +186,10 @@ void QWave::SMEN2Wave(const OP& A, const Parity& pari)
                                                         int startL, startR;
                                                         if(temps.at(3)=="positive")
                                                                 startR=0;
-                                                        else startR=dimoes.at(3).at(temps.at(3))*dimoes.at(2).at((temps.at(2)));
+                                                        else startR=dimoes.at(3).at(OppS(temps.at(3)))*dimoes.at(2).at(OppS(temps.at(2)));
                                                         if(temps.at(0)=="positive")
                                                                 startL=0;
-                                                        else startL=dimoes.at(0).at(temps.at(0))*dimoes.at(1).at(temps.at(1));
+                                                        else startL=dimoes.at(0).at(OppS(temps.at(0)))*dimoes.at(1).at(OppS(temps.at(1)));
                                                         //cout<<startL+is*_Dim.at(i).MDim+im<<endl<< startR+ie*_Dim.at(i).NDim+in<<endl;
                                                         _Wave.at(i).at(im).at(in)(is, ie)=A._PMat.at(PR)(startL+is*_Dim.at(i).MDim+im, startR+ie*_Dim.at(i).NDim+in);
                                                 }
@@ -731,27 +731,27 @@ void QWave::Hamiltanian(const Sub& Sys, const SingleSub& M, const SingleSub& N, 
         NOPWave(N.System(), wave, pari);
         EnvOPWave(Env.System(), wave, pari);
 
-        SysMOPWave(Sys.SysA(), M.SysAdag(), wave, para.gr(), pari);
-        SysMOPWave(Sys.SysAdag(), M.SysA(), wave, para.gr(), pari);
-        SysMOPWave(Sys.SysAdag(), M.SysAdag(), wave, para.gcr(), pari);
-        SysMOPWave(Sys.SysA(), M.SysA(), wave, para.gcr(), pari);
+        SysMOPWave(Sys.SysA(), M.SysAdag(), wave, -1*para.Jr(), pari);
+        SysMOPWave(Sys.SysAdag(), M.SysA(), wave, -1*para.Jr(), pari);
+        SysMOPWave(Sys.SysAdag(), M.SysAdag(), wave, -1*para.Jcr(), pari);
+        SysMOPWave(Sys.SysA(), M.SysA(), wave, -1*para.Jcr(), pari);
 
 
-        EnvMOPWave(Env.SysA1(), M.SysAdag(), wave, para.gr(), pari);
-        EnvMOPWave(Env.SysAdag1(), M.SysA(), wave, para.gr(), pari);
-        EnvMOPWave(Env.SysAdag1(), M.SysAdag(), wave, para.gcr(), pari);
-        EnvMOPWave(Env.SysA1(), M.SysA(), wave, para.gcr(), pari);
+        EnvMOPWave(Env.SysA1(), M.SysAdag(), wave, -1*para.Jr(), pari);
+        EnvMOPWave(Env.SysAdag1(), M.SysA(), wave, -1*para.Jr(), pari);
+        EnvMOPWave(Env.SysAdag1(), M.SysAdag(), wave, -1*para.Jcr(), pari);
+        EnvMOPWave(Env.SysA1(), M.SysA(), wave, -1*para.Jcr(), pari);
 
 
-        EnvNOPWave(Env.SysA(), N.SysAdag(), wave, para.gr(), pari);
-        EnvNOPWave(Env.SysAdag(), N.SysA(), wave, para.gr(), pari);
-        EnvNOPWave(Env.SysAdag(), N.SysAdag(), wave, para.gcr(), pari);
-        EnvNOPWave(Env.SysA(), N.SysA(), wave, para.gcr(), pari);
+        EnvNOPWave(Env.SysA(), N.SysAdag(), wave, -1*para.Jr(), pari);
+        EnvNOPWave(Env.SysAdag(), N.SysA(), wave, -1*para.Jr(), pari);
+        EnvNOPWave(Env.SysAdag(), N.SysAdag(), wave, -1*para.Jcr(), pari);
+        EnvNOPWave(Env.SysA(), N.SysA(), wave, -1*para.Jcr(), pari);
 
-        SysNOPWave(Sys.SysA1(), N.SysAdag(), wave, para.gr(), pari);
-        SysNOPWave(Sys.SysAdag1(), N.SysA(), wave, para.gr(), pari);
-        SysNOPWave(Sys.SysAdag1(), N.SysAdag(), wave, para.gcr(), pari);
-        SysNOPWave(Sys.SysA1(), N.SysA(), wave, para.gcr(), pari);
+        SysNOPWave(Sys.SysA1(), N.SysAdag(), wave, -1*para.Jr(), pari);
+        SysNOPWave(Sys.SysAdag1(), N.SysA(), wave, -1*para.Jr(), pari);
+        SysNOPWave(Sys.SysAdag1(), N.SysAdag(), wave, -1*para.Jcr(), pari);
+        SysNOPWave(Sys.SysA1(), N.SysA(), wave, -1*para.Jcr(), pari);
 
 
 }
@@ -764,27 +764,27 @@ QWave(Sys, M, N, Env)
         NOPWave(N.System(), wave, pari);
         EnvOPWave(Env.System(), wave, pari);
 
-        SysMOPWave(Sys.SysA(), M.SysAdag(), wave, para.gr(), pari);
-        SysMOPWave(Sys.SysAdag(), M.SysA(), wave, para.gr(), pari);
-        SysMOPWave(Sys.SysAdag(), M.SysAdag(), wave, para.gcr(), pari);
-        SysMOPWave(Sys.SysA(), M.SysA(), wave, para.gcr(), pari);
+        SysMOPWave(Sys.SysA(), M.SysAdag(), wave, -1*para.Jr(), pari);
+        SysMOPWave(Sys.SysAdag(), M.SysA(), wave, -1*para.Jr(), pari);
+        SysMOPWave(Sys.SysAdag(), M.SysAdag(), wave, -1*para.Jcr(), pari);
+        SysMOPWave(Sys.SysA(), M.SysA(), wave, -1*para.Jcr(), pari);
 
 
-        EnvMOPWave(Env.SysA1(), M.SysAdag(), wave, para.gr(), pari);
-        EnvMOPWave(Env.SysAdag1(), M.SysA(), wave, para.gr(), pari);
-        EnvMOPWave(Env.SysAdag1(), M.SysAdag(), wave, para.gcr(), pari);
-        EnvMOPWave(Env.SysA1(), M.SysA(), wave, para.gcr(), pari);
+        EnvMOPWave(Env.SysA1(), M.SysAdag(), wave, -1*para.Jr(), pari);
+        EnvMOPWave(Env.SysAdag1(), M.SysA(), wave, -1*para.Jr(), pari);
+        EnvMOPWave(Env.SysAdag1(), M.SysAdag(), wave, -1*para.Jcr(), pari);
+        EnvMOPWave(Env.SysA1(), M.SysA(), wave, -1*para.Jcr(), pari);
 
 
-        EnvNOPWave(Env.SysA(), N.SysAdag(), wave, para.gr(), pari);
-        EnvNOPWave(Env.SysAdag(), N.SysA(), wave, para.gr(), pari);
-        EnvNOPWave(Env.SysAdag(), N.SysAdag(), wave, para.gcr(), pari);
-        EnvNOPWave(Env.SysA(), N.SysA(), wave, para.gcr(), pari);
+        EnvNOPWave(Env.SysA(), N.SysAdag(), wave, -1*para.Jr(), pari);
+        EnvNOPWave(Env.SysAdag(), N.SysA(), wave, -1*para.Jr(), pari);
+        EnvNOPWave(Env.SysAdag(), N.SysAdag(), wave, -1*para.Jcr(), pari);
+        EnvNOPWave(Env.SysA(), N.SysA(), wave, -1*para.Jcr(), pari);
 
-        SysNOPWave(Sys.SysA1(), N.SysAdag(), wave, para.gr(), pari);
-        SysNOPWave(Sys.SysAdag1(), N.SysA(), wave, para.gr(), pari);
-        SysNOPWave(Sys.SysAdag1(), N.SysAdag(), wave, para.gcr(), pari);
-        SysNOPWave(Sys.SysA1(), N.SysA(), wave, para.gcr(), pari);
+        SysNOPWave(Sys.SysA1(), N.SysAdag(), wave, -1*para.Jr(), pari);
+        SysNOPWave(Sys.SysAdag1(), N.SysA(), wave, -1*para.Jr(), pari);
+        SysNOPWave(Sys.SysAdag1(), N.SysAdag(), wave, -1*para.Jcr(), pari);
+        SysNOPWave(Sys.SysA1(), N.SysA(), wave, -1*para.Jcr(), pari);
 
 
 }
@@ -920,3 +920,27 @@ void QWave::Norm()
                 }
         }
 }*/
+
+
+
+int QWave::waveDim(const Parity& pari)const
+{
+        int re(0);
+        int npari;
+        if(pari==Positive)npari=0;
+        else npari=1;
+
+        for(int i=0; i<16; ++i)
+        {
+                int nnpari((i/8+(i%8)/4+((i%8)%4)/2+((i%8)%4)%2)%2);
+                if(nnpari==npari)
+                {
+                        re+=_Dim.at(i).SDim*_Dim.at(i).MDim*_Dim.at(i).NDim*_Dim.at(i).EDim;
+                        
+
+
+                }
+        }
+        return re;
+
+}

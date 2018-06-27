@@ -1,10 +1,10 @@
 #ifndef TEST_H
 #define TEST_H
 
-#include "QWave.h"
+#include "SuperEnergy.h"
 
-void test(const Parameter& para);
-void test(const Parameter& para)
+void test(Parameter& para);
+void test(Parameter& para)
 {
         /*Sub haha(para, 1);
         Sub hehe(para, haha, haha, 2);
@@ -23,46 +23,28 @@ void test(const Parameter& para)
         temp=hehe.SysA().PMat().at("negative")-heha.SysA().PMat().at("negative");
 
         //cout<<emp.sum()<<endl;*/
+        //cout<<para.Energy<<endl;
+        //OP a(para, SigmaI);
+        //OP b(para, Annihilation);
+        //OP c(b, a);
+        //c.show();
+
         SingleSub haha(para);
         
-        Sub hehe(para, 1);
+        Sub hehe(para, 1);//hehe.Show();
+        Parity pari(Positive);
+        Super sup(para, hehe, haha, haha, hehe, pari);
+        SuperEnergy supp(para, sup, pari);
+        OP U;
+        supp.wave.Wave2SMEN(U, pari);
+        OP UU;
+        double err;
+        UU.DenTruncL(U, para.D(), err);
 
-        QWave wave(hehe, haha, haha, hehe);
+        Sub a(para, hehe, hehe, 2);
+        a.Trunc(UU);
 
-        vector<double> f;
-        wave.Wave2f(f, Positive);
-
-        VectorXd ff(MatrixXd::Random(f.size(), 1));
-
-        for(int i=0; i<f.size(); ++i)
-        {
-                f.at(i)=ff(i);
-        }
-
-        wave.f2Wave(f, Positive);
-        QWave wave1(wave);
-
-        OP testOP;
-
-        wave.Wave2SMEN(testOP, Positive);
-        
-        wave1.SMEN2Wave(testOP, Positive);
-        vector<double> fff;
-        wave1.Wave2f(fff, Positive);
-        double sum(0);
-        for(int i=0; i<fff.size(); ++i)
-        {
-                sum+=abs(f.at(i)-fff.at(i));
-        }
-        cout<<sum<<endl<<f.at(2)<<endl<<fff.at(2)<<endl;
-        //cout<<f.size()<<endl<<fff.size()<<endl;
-        
-        QWave wave2(wave);
-        //wave.SysOPWave(hehe.System(), Positive);
-
-        /*wave2.Hamiltanian(hehe, haha, haha, hehe, wave, para, Positive);
-        QWave wave3(hehe, haha, haha, hehe, wave, para, Positive);*/
-        
+        a.Show();
 }
 
 

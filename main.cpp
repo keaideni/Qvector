@@ -1,5 +1,5 @@
-//#include "DMRG.h"
-#include "test.h"
+#include "DMRG.h"
+//#include "test.h"
 //#include "Calcu.h"
 
 
@@ -11,11 +11,11 @@ int main(void)
 
         Parameter para;
         //Sub::nmax=para.nmax();
-        test(para);
+        //test(para);
 
 
-        /*DMRG haha(para);
-        ofstream outfile("./result/Result");
+        DMRG haha(para);
+        /*ofstream outfile("./result/Result");
         outfile.precision(20);
         outfile<<"gr= "<<para.gr()<<" ,gcr= "<<para.gcr()<<" ,Jr= "<<para.Jr()
         <<" ,Jcr= "<<para.Jcr()<<" ,Energy= "<<haha.FEnergy()<<" ,ExcitedEnergy= "<<haha.Excited()<<" ,Entropy= "
