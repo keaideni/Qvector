@@ -16,6 +16,7 @@ class DMRG
         double _FEnergy;
         double _Entropy;
 	double _Excited;
+        const Parity& pari;
 public:
         const double& FEnergy()const{return _FEnergy;};
         const double& Entropy()const{return _Entropy;};
@@ -23,10 +24,10 @@ public:
         
 
 
-        DMRG(){};
+        //DMRG(){};
         ~DMRG(){};
 
-        DMRG(Parameter& para);
+        DMRG(Parameter& para, const Parity& _pari);
 
         //void Initialize(const int& dir, const int& Gdir, const int& OS, const int& OE);
 

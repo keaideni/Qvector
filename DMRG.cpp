@@ -4,17 +4,24 @@
 #include <iomanip>
 #include <ctime>
 
+string ptos(const Parity& _pari);
+string ptos(const Parity& _pari)
+{
+        if(_pari==Positive)
+        return "p";
+        else return "n";
+}
 
 
-
-DMRG::DMRG(Parameter& para):
+DMRG::DMRG(Parameter& para, const Parity& _pari):
 Sys(para, 1),
 Env(para, para.LatticeSize()),
 m(para, 2),
 n(para, para.LatticeSize()-1),
-SaveAll("./result/SaveAll"),
+SaveAll("./result/SaveAll"+ptos(_pari)),
 _FEnergy(100000),
-_Entropy(0)
+_Entropy(0),
+pari(_pari)
 {
         SaveAll.precision(15);
         Sys.Save(); Env.Save();
@@ -67,8 +74,8 @@ void DMRG::BuildUp(Parameter& para, int& OS, int& OE)
                 time_t start, end;
                 time(&start);
                 SingleSub haha(para); 
-                Super Sup(para, Sys, haha, haha, Env, Positive);
-                SuperEnergy Supp(para, Sup, Positive);
+                Super Sup(para, Sys, haha, haha, Env, pari);
+                SuperEnergy Supp(para, Sup, pari);
                 time(&end);
                 cout<<"The process of getting eigenstate takes "<<(end-start)<<"s."<<endl;
                 cout<<"the system operator takes "<<(double)(Sup.tsys)/CLOCKS_PER_SEC<<"s."<<endl;        
@@ -88,7 +95,7 @@ void DMRG::BuildUp(Parameter& para, int& OS, int& OE)
                 OP OPwave;
                 
                 time(&start);
-                Supp.wave.Wave2SMEN(OPwave, Positive);
+                Supp.wave.Wave2SMEN(OPwave, pari);
                 
                 OP MatrixU;
                 double err;
@@ -188,7 +195,7 @@ void DMRG::CalcuEnergy(Parameter& para, int& OS, int& OE, const int& dir, const 
         
         
        SingleSub haha(para); 
-        Super Sup(para, Sys, haha, haha, Env, Positive);
+        Super Sup(para, Sys, haha, haha, Env, pari);
         
         //cout<<"The process of constructing Super takes "<<(end-start)<<"s."<<endl;
         //SaveAll<<"The process of constructing Super takes "<<(end-start)<<"s."<<endl;
@@ -200,11 +207,11 @@ void DMRG::CalcuEnergy(Parameter& para, int& OS, int& OE, const int& dir, const 
                 MatrixXd finalwave;
                 Supp.wave.SMEN(finalwave);
                 SaveTruncM(finalwave, 10000);//The file "/Trunc/10000" is the final wave.
-		SuperEnergy Suppp(para, Sup, Positive);
+		SuperEnergy Suppp(para, Sup, pari);
         }*/
         time(&start);
-        SuperEnergy Supp(para, Sup, Positive, InitWave);
-        //SuperEnergy Supp(para, Sup, Positive, InitWave);
+        SuperEnergy Supp(para, Sup, pari);
+        //SuperEnergy Supp(para, Sup, pari, InitWave);
 
 	//_Excited=Supp.excited();
         time(&end);
@@ -227,24 +234,24 @@ void DMRG::CalcuEnergy(Parameter& para, int& OS, int& OE, const int& dir, const 
                         
                         Sub SysNew(para, Sys, m, OS+dir);
                         
-                        Supp.wave.Wave2SMEN(wave, Positive);
+                        Supp.wave.Wave2SMEN(wave, pari);
                         OP matrixT;
                         matrixT.DenTruncL(wave, para.D(), _Entropy);
                         SysNew.Trunc(matrixT);
                         SysNew.Save();
-                        //SaveTruncM(matrixT, SysNew.Orbital());
+                        matrixT.TruncSave(SysNew.Orbital());
                         //IniWave=matrixT.adjoint()*wave;
                 }else
                 {
                         
                         Sub SysNew(para, Env, n, OE+dir);
                         
-                        Supp.wave.Wave2SMEN(wave, Positive);
+                        Supp.wave.Wave2SMEN(wave, pari);
                         OP matrixT;
                         matrixT.DenTruncR(wave, para.D(), _Entropy);
                         SysNew.Trunc(matrixT);
                         SysNew.Save();
-                        //SaveTruncM(matrixT, SysNew.Orbital());
+                        matrixT.TruncSave(SysNew.Orbital());
                         //IniWave=wave*matrixT;
                 }
         }else
@@ -255,31 +262,31 @@ void DMRG::CalcuEnergy(Parameter& para, int& OS, int& OE, const int& dir, const 
                         
                         Sub SysNew(para, n, Sys, OS+dir);
                         
-                        Supp.wave.Wave2NSME(wave, Positive);
+                        Supp.wave.Wave2NSME(wave, pari);
                         OP matrixT;
                         matrixT.DenTruncL(wave, para.D(), _Entropy);
                         //cout<<matrixT.rows()<<"x"<<matrixT.cols()<<endl;
                         //int nn; cin>>nn;
                         SysNew.Trunc(matrixT);
                         SysNew.Save();
-                        //SaveTruncM(matrixT, SysNew.Orbital());
+                        matrixT.TruncSave(SysNew.Orbital());
                         //IniWave=matrixT.adjoint()*wave;
                 }else
                 {
                         
                         Sub SysNew(para, m, Env, OE+dir);
                         
-                        Supp.wave.Wave2NSME(wave, Positive);
+                        Supp.wave.Wave2NSME(wave, pari);
                         OP matrixT;
                         matrixT.DenTruncR(wave, para.D(), _Entropy);
                         SysNew.Trunc(matrixT);
                         SysNew.Save();
-                        //SaveTruncM(matrixT, SysNew.Orbital());
+                        matrixT.TruncSave(SysNew.Orbital());
                         //IniWave=wave*matrixT;
                 }
         }
 
-        exit(true);
+        //exit(true);
 
 }
 
