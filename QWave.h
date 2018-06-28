@@ -3,7 +3,7 @@
 #include<vector>
 #include "Sub.h"
 #include "SingleSub.h"
-
+#include <ctime>
 struct dimension
 {
         int SDim, EDim, MDim, NDim;
@@ -14,8 +14,7 @@ class QWave
 {
 private:
 
-        vector<vector<vector<MatrixXd>>> _Wave;//i<order<m<n,mat>>>
-        vector<dimension> _Dim;
+
         //========================reshape===============================
 
         const int order(const string& a1, const string& a2, const string& a3, const string& a4)const
@@ -79,9 +78,9 @@ private:
         const string OppS(const string& s)const;//return the opposite of s.
 
 public:
-
         const vector<vector<vector<MatrixXd>>>& Wave()const
         {return _Wave;};
+        const vector<dimension>& Dim()const{return _Dim;};
         //QWave(){};
         ~QWave(){};
         QWave(const QWave&a):

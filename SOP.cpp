@@ -46,14 +46,14 @@ SOP::SOP(const Parameter& para, const OpType& type)
 			
 			SpMat tempp(_PDim.at("negative"), _PDim.at("positive"));
 			SpMat tempn(_PDim.at("positive"), _PDim.at("negative"));
-			for(int i=0; i<_PDim.at("positive"); ++i)
+			for(int i=0; i+1<_PDim.at("positive"); ++i)
 			{
 				if(i<_PDim.at("negative"))
 				tempp.insert(i, i+1)=sqrt(2*(i+1));
 			}
 			for(int i=0; i<_PDim.at("negative"); ++i)
 			{
-				if(i+1<_PDim.at("positive"))
+				if(i<_PDim.at("positive"))
 				tempn.insert(i, i)=sqrt(2*i+1);
 			}
 

@@ -48,30 +48,30 @@ _System(SubL._System, SubR._SysEye)
         _System.add(temp);
 
         temp.Kron(SubL._SysAdag, SubR._SysA1);
-        _System.add(temp*para.gr());
+        _System.add(-1*temp*para.Jr());
 
         temp.Kron(SubL._SysA, SubR._SysAdag1);
-        _System.add(temp*para.gr());
+        _System.add(-1*temp*para.Jr());
 
         temp.Kron(SubL._SysAdag, SubR._SysAdag1);
-        _System.add(temp*para.gcr());
+        _System.add(-1*temp*para.Jcr());
 
         temp.Kron(SubL._SysA, SubR._SysA1);
-        _System.add(temp*para.gcr());
+        _System.add(-1*temp*para.Jcr());
 
         
 
-        temp.Kron(SubL._SysAdag1, SubR._SysA);
-        _System.add(temp*para.gr());
+        //temp.Kron(SubL._SysAdag1, SubR._SysA);
+        //_System.add(temp*para.Jr());
 
-        temp.Kron(SubL._SysA1, SubR._SysAdag);
-        _System.add(temp*para.gr());
+        //temp.Kron(SubL._SysA1, SubR._SysAdag);
+        //_System.add(temp*para.Jr());
 
-        temp.Kron(SubL._SysAdag1, SubR._SysAdag);
-        _System.add(temp*para.gcr());
+        //temp.Kron(SubL._SysAdag1, SubR._SysAdag);
+        //_System.add(temp*para.Jcr());
 
-        temp.Kron(SubL._SysA1, SubR._SysA);
-        _System.add(temp*para.gcr());
+        //temp.Kron(SubL._SysA1, SubR._SysA);
+        //_System.add(temp*para.Jcr());
 
         //_System=temp.Kron(SubL._System, SubR._SysEye);//+temp.Kron(SubL._SysEye, SubR._System)+para.gr()*temp.Kron(SubL._SysAdag, SubR._SysA1)+para.gr()*temp.Kron(SubL._SysA, SubR._SysAdag1)+para.gcr()*temp.Kron(SubL._SysAdag, SubR._SysAdag1)+para.gcr()*temp.Kron(SubL._SysA, SubR._SysA1)+para.gr()*temp.Kron(SubL._SysAdag1, SubR._SysA)+para.gr()*temp.Kron(SubL._SysA1, SubR._SysAdag)+para.gcr()*temp.Kron(SubL._SysAdag1, SubR._SysAdag)+para.gcr()*temp.Kron(SubL._SysA1, SubR._SysA);
 

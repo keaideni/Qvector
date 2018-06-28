@@ -46,14 +46,14 @@ OP::OP(const Parameter& para, const OpType& type)
 			
 			MatrixXd tempp(MatrixXd::Zero(_PDim.at("negative"), _PDim.at("positive")));
 			MatrixXd tempn(MatrixXd::Zero(_PDim.at("positive"), _PDim.at("negative")));
-			for(int i=0; i<_PDim.at("positive"); ++i)
+			for(int i=0; i<_PDim.at("positive")-1; ++i)
 			{
 				if(i<_PDim.at("negative"))
 				tempp(i, i+1)=sqrt(2*(i+1));
 			}
 			for(int i=0; i<_PDim.at("negative"); ++i)
 			{
-				if(i+1<_PDim.at("positive"))
+				if(i<_PDim.at("positive"))
 				tempn(i, i)=sqrt(2*i+1);
 			}
 
@@ -639,7 +639,7 @@ void OP::DenTruncL(const OP& A, const int& D, double& err)
         for(int i=0; i<Denmat.size(); ++i)
         {
                 sum+=Denmat.at(i).lambda;
-                if(i<min)sum+=Denmat.at(i).lambda;
+                if(i<min)sum1+=Denmat.at(i).lambda;
         }
         err=sum-sum1;
         

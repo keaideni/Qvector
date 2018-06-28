@@ -15,6 +15,7 @@ int main(void)
 
 
         DMRG haha(para);
+
         /*ofstream outfile("./result/Result");
         outfile.precision(20);
         outfile<<"gr= "<<para.gr()<<" ,gcr= "<<para.gcr()<<" ,Jr= "<<para.Jr()

@@ -35,11 +35,16 @@ public:
                 {
 			//if(eigs.eigenvalues()(0)<eigs.eigenvalues()(1))
 			//{
-                        vector<double> f;
+                        vector<double> f;double sum(0);
                         for(int i=0; i<eigs.eigenvectors(1).col(0).size(); ++i)
+                        {
                                 f.push_back(eigs.eigenvectors(1)(i, 0));
+                        }
 
 				wave.f2Wave(f, pari);
+                              
+                                        
+                          
 			//}else
 			//{
 				//wave.f2Wave(eigs.eigenvectors(2).col(1));
@@ -47,7 +52,7 @@ public:
                         para.Energy = eigs.eigenvalues()(0);
                         //_excited= eigs.eigenvalues()(0)>eigs.eigenvalues()(1)?eigs.eigenvalues()(0):eigs.eigenvalues()(1);
 		
-                        //std::cout << eigs.num_iterations() << std::endl;
+                        std::cout << eigs.num_iterations() << std::endl;
                 }
 
                 

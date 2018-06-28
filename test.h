@@ -29,22 +29,24 @@ void test(Parameter& para)
         //OP c(b, a);
         //c.show();
 
-        SingleSub haha(para);
+        //SingleSub ha(para);
         
         Sub hehe(para, 1);//hehe.Show();
         Parity pari(Positive);
-        Super sup(para, hehe, haha, haha, hehe, pari);
-        SuperEnergy supp(para, sup, pari);
-        OP U;
-        supp.wave.Wave2SMEN(U, pari);
-        OP UU;
-        double err;
-        UU.DenTruncL(U, para.D(), err);
+        Sub haha(para, hehe, hehe, 2);
+        haha.Show();
+        //Super sup(para, hehe, haha, haha, hehe, pari);
+        //SuperEnergy supp(para, sup, pari);
+        //OP U;
+        //supp.wave.Wave2SMEN(U, pari);
+        //OP UU;
+        //double err;
+        //UU.DenTruncL(U, para.D(), err);
 
-        Sub a(para, hehe, hehe, 2);
-        a.Trunc(UU);
+        //Sub a(para, hehe, hehe, 2);
+        //a.Trunc(UU);
 
-        a.Show();
+        //a.Show();
 }
 
 

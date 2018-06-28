@@ -133,7 +133,6 @@ void DMRG::BuildUp(Parameter& para, int& OS, int& OE)
                 time(&start);
                 Supp.wave.Wave2SMEN(OPwave, Positive);
                 
-                
                 OP MatrixU;
                 double err;
                 MatrixU.DenTruncL(OPwave, para.D(), err);
