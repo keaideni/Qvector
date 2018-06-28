@@ -22,6 +22,7 @@ private:
         
 public:
 
+        clock_t tsys, tsm, tsn, tem, ten;
 
         int rows() { return Dim; };
         int cols() { return Dim; };
@@ -41,6 +42,8 @@ public:
         _Wave(_Sys, _m, _n, _Env),
         pari(_pari)
         {
+               time_t start=clock();
+                tsys=tsm=tsn=tem=ten=start-start;
                Dim=_Wave.waveDim(pari); 
         };
 
@@ -65,6 +68,12 @@ public:
                 QWave temp(Sys, m, n, Env, _Wave, para, pari);
                 _Wave=temp;
                 _Wave.Wave2f(g, pari);
+                tsys+=temp.tsys;
+                tsm+=temp.tsm;
+                tsn+=temp.tsn;
+                tem+=temp.tem;
+                ten+=temp.ten;
+                //cout<<"haha"<<endl;
         };
 
 };

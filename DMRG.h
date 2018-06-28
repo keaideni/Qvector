@@ -6,7 +6,7 @@
 
 class DMRG
 {
-        MatrixXd IniWave;
+        QWave InitWave;
         Sub Sys;
         Sub Env;
         Sub m;

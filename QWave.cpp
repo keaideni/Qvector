@@ -759,33 +759,46 @@ void QWave::Hamiltanian(const Sub& Sys, const SingleSub& M, const SingleSub& N, 
 QWave::QWave(const Sub& Sys, const SingleSub& M, const SingleSub& N, const Sub& Env, const QWave& wave, const Parameter& para, const Parity& pari):
 QWave(Sys, M, N, Env)
 {
+        clock_t start, end;
+        start=clock();tsys=tsm=tsn=tem=ten=start-start;
         SysOPWave(Sys.System(), wave, pari);
         MOPWave(M.System(), wave, pari);
         NOPWave(N.System(), wave, pari);
         EnvOPWave(Env.System(), wave, pari);
+        end=clock();
+        tsys+=end-start;
 
+        start=clock();
         SysMOPWave(Sys.SysA(), M.SysAdag(), wave, -1*para.Jr(), pari);
         SysMOPWave(Sys.SysAdag(), M.SysA(), wave, -1*para.Jr(), pari);
         SysMOPWave(Sys.SysAdag(), M.SysAdag(), wave, -1*para.Jcr(), pari);
         SysMOPWave(Sys.SysA(), M.SysA(), wave, -1*para.Jcr(), pari);
+        end=clock();
+        tsm+=end-start;
 
-
+        start=clock();
         EnvMOPWave(Env.SysA1(), M.SysAdag(), wave, -1*para.Jr(), pari);
         EnvMOPWave(Env.SysAdag1(), M.SysA(), wave, -1*para.Jr(), pari);
         EnvMOPWave(Env.SysAdag1(), M.SysAdag(), wave, -1*para.Jcr(), pari);
         EnvMOPWave(Env.SysA1(), M.SysA(), wave, -1*para.Jcr(), pari);
+        end=clock();
+        tem+=(end-start);
 
-
+        start=clock();
         EnvNOPWave(Env.SysA(), N.SysAdag(), wave, -1*para.Jr(), pari);
         EnvNOPWave(Env.SysAdag(), N.SysA(), wave, -1*para.Jr(), pari);
         EnvNOPWave(Env.SysAdag(), N.SysAdag(), wave, -1*para.Jcr(), pari);
         EnvNOPWave(Env.SysA(), N.SysA(), wave, -1*para.Jcr(), pari);
+        end=clock();
+        ten+=end-start;
 
+        start=clock();
         SysNOPWave(Sys.SysA1(), N.SysAdag(), wave, -1*para.Jr(), pari);
         SysNOPWave(Sys.SysAdag1(), N.SysA(), wave, -1*para.Jr(), pari);
         SysNOPWave(Sys.SysAdag1(), N.SysAdag(), wave, -1*para.Jcr(), pari);
         SysNOPWave(Sys.SysA1(), N.SysA(), wave, -1*para.Jcr(), pari);
-
+        end=clock();
+        tsn+=end-start;
 
 }
 //===========================================================================

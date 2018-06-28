@@ -7,53 +7,6 @@
 
 
 
-/*void SaveTruncM(const MatrixXd& A, const int& logo);
-void SaveTruncM(const MatrixXd& A, const int& logo)
-{
-        string filename("./trunc/");
-        filename+=itos(logo);
-
-        ofstream outfile(filename);
-        outfile<<A.rows()<<endl<<A.cols()<<endl;
-        outfile.precision(20);
-        outfile<<A<<endl;
-        
-        outfile.close();
-}
-
-
-void ReadTruncM(MatrixXd& A, const int& logo);
-void ReadTruncM(MatrixXd& A, const int& logo)
-{
-        string filename("./trunc/");
-        filename+=itos(logo);
-
-        ifstream infile(filename);
-        if(!infile)
-        {
-                cerr<<"Error! The file "<<filename<<" doesn't exist!!"<<endl;
-                exit(true);
-        }
-        int rows, cols;
-        infile>>rows>>cols;
-        A=MatrixXd::Zero(rows, cols);
-
-        for(int i=0; i<rows; ++i)
-        {
-                for(int j=0; j<cols; ++j)
-                {
-                        infile>>A(i,j);
-                }
-        }
-        infile.close();
-
-        
-}*/
-
-
-
-
-
 DMRG::DMRG(Parameter& para):
 Sys(para, 1),
 Env(para, para.LatticeSize()),
@@ -71,15 +24,15 @@ _Entropy(0)
         cout<<"===================The growth process:==================="<<endl;
         SaveAll<<"===================The growth process:==================="<<endl;
         Parameter paraup;
-        paraup.ChangeD(20);
+        paraup.ChangeD(40);
         BuildUp(paraup, OS, OE);
         cout<<"===================The sweep process:==================="<<endl;
         SaveAll<<"===================The sweep process:==================="<<endl;
 
 
         //para.ChangeD(200);
-        //OS-=1;OE+=1;//This one for the IniWave works.
-        //Sweep(para, OS, OE);
+        OS-=1;OE+=1;//This one for the IniWave works.
+        Sweep(para, OS, OE);
 
         //cout<<"===================The sweep process finished!================="<<endl;
         SaveAll<<"===================The sweep process finished!================="<<endl;
@@ -118,7 +71,11 @@ void DMRG::BuildUp(Parameter& para, int& OS, int& OE)
                 SuperEnergy Supp(para, Sup, Positive);
                 time(&end);
                 cout<<"The process of getting eigenstate takes "<<(end-start)<<"s."<<endl;
-        
+                cout<<"the system operator takes "<<(double)(Sup.tsys)/CLOCKS_PER_SEC<<"s."<<endl;        
+                cout<<"the sm operator takes "<<(double)(Sup.tsm)/CLOCKS_PER_SEC<<"s."<<endl;        
+                cout<<"the sn operator takes "<<(double)(Sup.tsn)/CLOCKS_PER_SEC<<"s."<<endl;        
+                cout<<"the em operator takes "<<(double)(Sup.tem)/CLOCKS_PER_SEC<<"s."<<endl;        
+                cout<<"the en operator takes "<<(double)(Sup.ten)/CLOCKS_PER_SEC<<"s."<<endl;        
                 
 
                 cout.precision(15);
@@ -143,12 +100,12 @@ void DMRG::BuildUp(Parameter& para, int& OS, int& OE)
                 Sub SysNew(para, Sys, m, OS+1);
                 SysNew.Trunc(MatrixU);
                 SysNew.Save();
-                //SaveTruncM(MatrixU, SysNew.Orbital());
+                MatrixU.TruncSave(SysNew.Orbital());
 
                 Sub EnvNew(para, Env, n, OE-1);
                 EnvNew.Trunc(MatrixV);
                 EnvNew.Save();
-                //SaveTruncM(MatrixV, Env.Orbital());
+                MatrixV.TruncSave(Env.Orbital());
                 time(&end);
                 cout<<"The process of truncate takes "<<(end-start)<<"s."<<endl;
                 m.ChangeOrbital(m.Orbital()+1);
@@ -156,10 +113,10 @@ void DMRG::BuildUp(Parameter& para, int& OS, int& OE)
                 OS+=1;
                 OE-=1;
 
-                //if(OE-OS==1)
-                //{
-                        //Supp.wave.SMEN(IniWave);
-                //}
+                if(OE-OS==1)
+                {
+                        InitWave=Supp.wave;
+                }
 
         }
 
@@ -237,12 +194,6 @@ void DMRG::CalcuEnergy(Parameter& para, int& OS, int& OE, const int& dir, const 
         //SaveAll<<"The process of constructing Super takes "<<(end-start)<<"s."<<endl;
         
 
-        time(&start);
-        SuperEnergy Supp(para, Sup, Positive);
-
-	//_Excited=Supp.excited();
-        time(&end);
-        cout<<"The process of getting eigenstate takes "<<(end-start)<<"s."<<endl;
         //==============to save the final wave=======================
         /*if((OS==(para.LatticeSize()/2-1)&dir==1)|(OE==(para.LatticeSize()/2+2)&dir==-1))
         {
@@ -251,7 +202,14 @@ void DMRG::CalcuEnergy(Parameter& para, int& OS, int& OE, const int& dir, const 
                 SaveTruncM(finalwave, 10000);//The file "/Trunc/10000" is the final wave.
 		SuperEnergy Suppp(para, Sup, Positive);
         }*/
+        time(&start);
+        SuperEnergy Supp(para, Sup, Positive, InitWave);
+        //SuperEnergy Supp(para, Sup, Positive, InitWave);
 
+	//_Excited=Supp.excited();
+        time(&end);
+        cout<<"The process of getting eigenstate takes "<<(end-start)<<"s."<<endl;
+        
 
 
         cout.precision(15);
@@ -320,6 +278,8 @@ void DMRG::CalcuEnergy(Parameter& para, int& OS, int& OE, const int& dir, const 
                         //IniWave=wave*matrixT;
                 }
         }
+
+        exit(true);
 
 }
 

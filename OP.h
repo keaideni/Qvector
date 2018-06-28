@@ -95,6 +95,8 @@ public:
         void DenTruncL(const OP& A, const int& D, double& err);//OP must be a wave OP in QWave.h.
         void DenTruncR(const OP& A, const int& D, double& err);
         void TruncU(const OP& A);
+        void TruncSave(const int& orbital)const;//To save the truncation operator;
+        void TruncRead(const int& orbital);
 
 
 	void show()const

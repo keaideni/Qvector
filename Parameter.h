@@ -47,5 +47,5 @@ public:
         
 };
 
-
+std::string itos(const int& i);
 #endif // PARAMETER_H

@@ -32,7 +32,7 @@ Sub.o:Sub.cpp Sub.h Parameter.h
 	$(CCCOM) -c Sub.cpp -O2 $(LIBSPECTRA)
 QWave.o:QWave.cpp QWave.h
 	$(CCCOM) -c QWave.cpp -O2 $(LIBSPECTRA)
-DMRG.o:DMRG.cpp DMRG.h SuperEnergy.h 
+DMRG.o:DMRG.cpp DMRG.h SuperEnergy.h Super.h 
 	$(CCCOM) -c DMRG.cpp -O2 $(LIBSPECTRA)
 .PHONY:clean
 clean:
