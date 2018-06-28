@@ -28,12 +28,12 @@ pari(_pari)
 
         int OS(1), OE(para.LatticeSize());
 
-        cout<<"===================The growth process:==================="<<endl;
+        //cout<<"===================The growth process:==================="<<endl;
         SaveAll<<"===================The growth process:==================="<<endl;
-        Parameter paraup;
-        paraup.ChangeD(40);
-        BuildUp(paraup, OS, OE);
-        cout<<"===================The sweep process:==================="<<endl;
+        //Parameter paraup;
+        //paraup.ChangeD(40);
+        BuildUp(para, OS, OE);
+        //cout<<"===================The sweep process:==================="<<endl;
         SaveAll<<"===================The sweep process:==================="<<endl;
 
 
@@ -77,17 +77,17 @@ void DMRG::BuildUp(Parameter& para, int& OS, int& OE)
                 Super Sup(para, Sys, haha, haha, Env, pari);
                 SuperEnergy Supp(para, Sup, pari);
                 time(&end);
-                cout<<"The process of getting eigenstate takes "<<(end-start)<<"s."<<endl;
-                cout<<"the system operator takes "<<(double)(Sup.tsys)/CLOCKS_PER_SEC<<"s."<<endl;        
-                cout<<"the sm operator takes "<<(double)(Sup.tsm)/CLOCKS_PER_SEC<<"s."<<endl;        
-                cout<<"the sn operator takes "<<(double)(Sup.tsn)/CLOCKS_PER_SEC<<"s."<<endl;        
-                cout<<"the em operator takes "<<(double)(Sup.tem)/CLOCKS_PER_SEC<<"s."<<endl;        
-                cout<<"the en operator takes "<<(double)(Sup.ten)/CLOCKS_PER_SEC<<"s."<<endl;        
+                //cout<<"The process of getting eigenstate takes "<<(end-start)<<"s."<<endl;
+                //cout<<"the system operator takes "<<(double)(Sup.tsys)/CLOCKS_PER_SEC<<"s."<<endl;        
+                //cout<<"the sm operator takes "<<(double)(Sup.tsm)/CLOCKS_PER_SEC<<"s."<<endl;        
+                //cout<<"the sn operator takes "<<(double)(Sup.tsn)/CLOCKS_PER_SEC<<"s."<<endl;        
+                //cout<<"the em operator takes "<<(double)(Sup.tem)/CLOCKS_PER_SEC<<"s."<<endl;        
+                //cout<<"the en operator takes "<<(double)(Sup.ten)/CLOCKS_PER_SEC<<"s."<<endl;        
                 
 
-                cout.precision(15);
-                cout<<"OS="<<setw(10)<<OS<<"; OE="<<setw(10)<<OE<<"; The energy="
-                <<setw(18)<<para.Energy<<endl;
+                //cout.precision(15);
+                //cout<<"OS="<<setw(10)<<OS<<"; OE="<<setw(10)<<OE<<"; The energy="
+                //<<setw(18)<<para.Energy<<endl;
                 SaveAll<<"OS="<<setw(10)<<OS<<"; OE="<<setw(10)<<OE<<"; The energy="
                 <<setw(18)<<para.Energy<<endl;
                 //int nn; cin>>nn;
@@ -114,7 +114,7 @@ void DMRG::BuildUp(Parameter& para, int& OS, int& OE)
                 EnvNew.Save();
                 MatrixV.TruncSave(Env.Orbital());
                 time(&end);
-                cout<<"The process of truncate takes "<<(end-start)<<"s."<<endl;
+                //cout<<"The process of truncate takes "<<(end-start)<<"s."<<endl;
                 m.ChangeOrbital(m.Orbital()+1);
                 n.ChangeOrbital(n.Orbital()-1);
                 OS+=1;
@@ -165,8 +165,8 @@ void DMRG::Sweep(Parameter& para, int& OS, int& OE)
                         stop=(err<1e-6);
 
                         if(!stop)
-                        SaveAll<<"==========the "<<SweepNo<<"th sweeps=============="<<endl;
-                        cout<<"==========the "<<SweepNo++<<"th sweeps=============="<<endl;
+                        //cout<<"==========the "<<SweepNo<<"th sweeps=============="<<endl;
+                        SaveAll<<"==========the "<<SweepNo++<<"th sweeps=============="<<endl;
                         if(SweepNo==2)Gdir=-1;
                         
                 }
@@ -215,13 +215,13 @@ void DMRG::CalcuEnergy(Parameter& para, int& OS, int& OE, const int& dir, const 
 
 	//_Excited=Supp.excited();
         time(&end);
-        cout<<"The process of getting eigenstate takes "<<(end-start)<<"s."<<endl;
+        //cout<<"The process of getting eigenstate takes "<<(end-start)<<"s."<<endl;
         
 
 
-        cout.precision(15);
-        cout<<"OS="<<setw(10)<<OS<<"; OE="<<setw(10)<<OE<<"; The energy="
-        <<setw(18)<<para.Energy<<endl;
+        //cout.precision(15);
+        //cout<<"OS="<<setw(10)<<OS<<"; OE="<<setw(10)<<OE<<"; The energy="
+        //<<setw(18)<<para.Energy<<endl;
         SaveAll<<"OS="<<setw(10)<<OS<<"; OE="<<setw(10)<<OE<<"; The energy="
         <<setw(18)<<para.Energy<<endl;
 
