@@ -104,6 +104,18 @@ public:
         void SMEN2Wave(const OP& A, const Parity& pari);
         //void NSME(MatrixXd& A)const;
 
+//========================To reshape the waveop by the QWave========================
+//=======================This part works for DMRG::Initialize=======================
+
+        void d1g1(OP& tar, const OP& sta, const Parity& pari)const;//The sta is S(En), to (nS)E
+        void dmg1(OP& tar, const OP& sta, const Parity& pari)const;//The sta is (Sm)E, to S(mE)
+        void d1gm(OP& tar, const OP& sta, const Parity& pari)const;//The sta is S(mE), to (Sm)E
+        void dmgm(OP& tar, const OP& sta, const Parity& pari)const;//The sta is (nS)E, to S(En)
+
+
+
+//==================================================================================
+
 
         
 
@@ -116,6 +128,8 @@ public:
 
         const QWave& operator=(const QWave& a)
         {
+                _Dim.clear();
+                _Wave.clear();
                 _Dim=a._Dim;
                 _Wave=a.Wave();
                 return *this;

@@ -20,7 +20,7 @@ wave(sup.Wave())
                 eigs.init();
                 eigs.compute(10000);
                 time(&end);
-                //cout<<"The calculation takes "<<end-start<<"s."<<endl;
+                cout<<"The calculation takes "<<end-start<<"s."<<endl;
                 if (eigs.info() == SUCCESSFUL)
                 {
 			//if(eigs.eigenvalues()(0)<eigs.eigenvalues()(1))
@@ -49,7 +49,7 @@ wave(sup.Wave())
 		
                         //std::cout << eigs.num_iterations() << std::endl;
                 }
-                //cout<<"The values copy takes "<<end-start<<"s."<<endl;
+                cout<<"The values copy takes "<<end-start<<"s."<<endl;
 
                 
         }
@@ -71,7 +71,7 @@ SuperEnergy::SuperEnergy(Parameter&para,Super& sup, const Parity& pari, const QW
                 eigs.init();
                 eigs.compute(10000);
                 time(&end);
-                //cout<<"The calculation takes "<<end-start<<"s."<<endl;
+                cout<<"The calculation takes "<<end-start<<"s."<<endl;
                 if (eigs.info() == SUCCESSFUL)
                 {
 			 vector<double> f;double sum(0);
@@ -95,7 +95,7 @@ SuperEnergy::SuperEnergy(Parameter&para,Super& sup, const Parity& pari, const QW
                         para.Energy = eigs.eigenvalues()(0);
                         //_excited= eigs.eigenvalues()(0)>eigs.eigenvalues()(1)?eigs.eigenvalues()(0):eigs.eigenvalues()(1);
                 }
-                //cout<<"The values copy takes "<<end-start<<"s."<<endl;
+                cout<<"The values copy takes "<<end-start<<"s."<<endl;
 
                 
         };

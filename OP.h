@@ -87,6 +87,14 @@ public:
 	const OP operator*(const OP& a)const;
 	const OP& time(const double& d);
 	const OP operator*(const double& d)const;
+        //To calculate an OP time wave; left |xy> to |z>.
+        const OP& LWavetime(const OP& a, const OP& wave);
+        //To calculate a wave*TruncU time OP; right |xy> to |z>.
+        const OP& RWavetime(const OP& wave, const OP& a);
+        //To calculate wave*TruncU.transpose. right |z> to |xy>.
+        const OP& RWavetime2(const OP& wave, const OP& a);
+        //To calculate TruncU*wave. left |z> to |xy>.
+        const OP& LWavetime2(const OP& wave, const OP& a);
 
 	
 	void save(ofstream& outfile)const;
@@ -110,15 +118,15 @@ public:
 			cout<<"This is a parity changed operator"<<endl;
 		}
 
-		cout<<"===========The dimension for each parity=========="<<endl;
-		cout<<"The positive => "<<_PDim.at("positive")<<endl;
-		cout<<"THe negative => "<<_PDim.at("negative")<<endl;
+		//cout<<"===========The dimension for each parity=========="<<endl;
+		//cout<<"The positive => "<<_PDim.at("positive")<<endl;
+		//cout<<"THe negative => "<<_PDim.at("negative")<<endl;
 		cout<<"===========The matrix for different parity========="<<endl;
 		auto it=_PMat.find("positive");
-		if(it!=_PMat.end())cout<<"The positive => "<<endl<<_PMat.at("positive")<<endl;//.rows()<<"X"<<_PMat.at("positive").cols()<<endl;
+		if(it!=_PMat.end())cout<<"The positive => "<<endl<<_PMat.at("positive").rows()<<"X"<<_PMat.at("positive").cols()<<endl;
 		auto itt=_PMat.find("negative");
 		if(itt!=_PMat.end())
-		cout<<"The negative => "<<endl<<_PMat.at("negative")<<endl;//.rows()<<"X"<<_PMat.at("negative").cols()<<endl;
+		cout<<"The negative => "<<endl<<_PMat.at("negative").rows()<<"X"<<_PMat.at("negative").cols()<<endl;
 
 
 		

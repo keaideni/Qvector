@@ -313,7 +313,247 @@ const vector<unordered_map<string, int>> QWave::DimOES()const
         return tempdim;
 }
 
+//========================To reshape the waveop by the QWave========================
+//=======================This part works for DMRG::Initialize=======================
 
+
+void QWave::d1g1(OP& tar, const OP& sta, const Parity& pari)const
+{
+        tar._PMat.clear();
+        tar._PDim.clear();
+        tar._PRL.clear();
+
+        int npari;
+        if(pari==Positive)npari=0;
+        else npari=1;
+        vector<unordered_map<string, int>> dimoes(DimOES());
+        for(int i=0; i<16; ++i)
+        {
+                vector<string> temps(n2s(i));
+                int nnpari((i/8+((i%8)%4)/2+((i%8)%4)%2)%2);
+                if(nnpari==npari)
+                {
+                        string PR(temps.at(3));
+                        string PL(QAdd(temps.at(0), temps.at(2)));
+                        string staPR(QAdd(temps.at(3), temps.at(2)));
+                        auto it=tar._PRL.find(PR);
+                        if(it==tar._PRL.end())
+                               tar._PRL.insert(pair<string, string>(PR, PL));
+
+                        auto itt=tar._PMat.find(PR);
+                        if(itt==tar._PMat.end())
+                        {
+                                int dimL(dimoes.at(0).at(temps.at(0))*dimoes.at(2).at(temps.at(2)));
+                                dimL+=dimoes.at(0).at(OppS(temps.at(0)))*dimoes.at(2).at(OppS(temps.at(2)));
+                                int dimR(dimoes.at(3).at(temps.at(3)));
+                                MatrixXd tempmat(dimL, dimR);
+                                tar._PMat.insert(pair<string, MatrixXd>(PR, tempmat));
+                                //cout<<PR<<"=>"<<dimL<<"x"<<dimR<<endl;
+                        }
+                        for(int ie=0; ie<_Dim.at(i).EDim; ++ie)
+                        {
+                                for(int in=0; in<_Dim.at(i).NDim; ++in)
+                                {
+                                        for(int is=0; is<_Dim.at(i).SDim; ++is)
+                                        {
+                                                //for(int im=0; im<_Dim.at(i).MDim; ++im)
+                                                //{
+                                                        int tarstartL, stastartR;
+                                                        if(temps.at(3)=="positive")
+                                                                stastartR=0;
+                                                        else stastartR=dimoes.at(3).at(OppS(temps.at(3)))*dimoes.at(2).at(OppS(temps.at(2)));
+                                                        if(temps.at(2)=="positive")
+                                                                tarstartL=0;
+                                                        else tarstartL=dimoes.at(2).at(OppS(temps.at(2)))*dimoes.at(0).at(OppS(temps.at(0)));
+                                                        //cout<<tarstartL+in*_Dim.at(i).SDim+is<<"\t"<< ie<<"\t"<<is<<"\t"<<stastartR+ie*_Dim.at(i).NDim+in<<endl;
+                                                        tar._PMat.at(PR)(tarstartL+in*_Dim.at(i).SDim+is,ie)=sta._PMat.at(staPR)(is, stastartR+ie*_Dim.at(i).NDim+in);
+                                                //}
+                                        }
+                                }
+                        }
+                }
+        } 
+}
+
+
+void QWave::dmg1(OP& tar, const OP& sta, const Parity& pari)const
+{
+        tar._PMat.clear();
+        tar._PDim.clear();
+        tar._PRL.clear();
+
+        int npari;
+        if(pari==Positive)npari=0;
+        else npari=1;
+        vector<unordered_map<string, int>> dimoes(DimOES());
+        for(int i=0; i<16; ++i)
+        {
+                vector<string> temps(n2s(i));
+                int nnpari((i/8+(i%8)/4+((i%8)%4)%2)%2);
+                if(nnpari==npari)
+                {
+                        string PR(QAdd(temps.at(3), temps.at(1)));
+                        string PL(temps.at(0));
+                        string staPR(temps.at(3));
+                        auto it=tar._PRL.find(PR);
+                        if(it==tar._PRL.end())
+                               tar._PRL.insert(pair<string, string>(PR, PL));
+
+                        auto itt=tar._PMat.find(PR);
+                        if(itt==tar._PMat.end())
+                        {
+                                int dimL(dimoes.at(0).at(temps.at(0)));
+                                int dimR(dimoes.at(3).at(temps.at(3))*dimoes.at(1).at(temps.at(1)));
+                                dimR+=dimoes.at(3).at(OppS(temps.at(3)))*dimoes.at(1).at(OppS(temps.at(1)));
+                                MatrixXd tempmat(dimL, dimR);
+                                tar._PMat.insert(pair<string, MatrixXd>(PR, tempmat));
+                        }
+                        for(int ie=0; ie<_Dim.at(i).EDim; ++ie)
+                        {
+                                //for(int in=0; in<_Dim.at(i).NDim; ++in)
+                                //{
+                                        for(int is=0; is<_Dim.at(i).SDim; ++is)
+                                        {
+                                                for(int im=0; im<_Dim.at(i).MDim; ++im)
+                                                {
+                                                        int tarstartR, stastartL;
+                                                        if(temps.at(1)=="positive")
+                                                                tarstartR=0;
+                                                        else tarstartR=dimoes.at(1).at(OppS(temps.at(1)))*dimoes.at(3).at(OppS(temps.at(3)));
+                                                        if(temps.at(0)=="positive")
+                                                                stastartL=0;
+                                                        else stastartL=dimoes.at(0).at(OppS(temps.at(0)))*dimoes.at(1).at(OppS(temps.at(1)));
+                                                        //cout<<startL+is*_Dim.at(i).MDim+im<<endl<< startR+ie*_Dim.at(i).NDim+in<<endl;
+                                                        tar._PMat.at(PR)(is,tarstartR+im*_Dim.at(i).EDim+ie)=sta._PMat.at(staPR)(stastartL+is*_Dim.at(i).MDim+im, ie);
+                                                }
+                                        }
+                                //}
+                        }
+                }
+        } 
+}
+
+
+
+
+void QWave::d1gm(OP& tar, const OP& sta, const Parity& pari)const
+{
+        tar._PMat.clear();
+        tar._PDim.clear();
+        tar._PRL.clear();
+
+        int npari;
+        if(pari==Positive)npari=0;
+        else npari=1;
+        vector<unordered_map<string, int>> dimoes(DimOES());
+        for(int i=0; i<16; ++i)
+        {
+                //cout<<i<<endl;
+                vector<string> temps(n2s(i));
+                int nnpari((i/8+(i%8)/4+((i%8)%4)%2)%2);
+                if(nnpari==npari)
+                {
+                        string PR(temps.at(3));
+                        string PL(QAdd(temps.at(0), temps.at(1)));
+                        string staPR(QAdd(temps.at(1), temps.at(3)));
+                        auto it=tar._PRL.find(PR);
+                        if(it==tar._PRL.end())
+                               tar._PRL.insert(pair<string, string>(PR, PL));
+
+                        auto itt=tar._PMat.find(PR);
+                        if(itt==tar._PMat.end())
+                        {
+                                int dimL(dimoes.at(0).at(temps.at(0))*dimoes.at(1).at(temps.at(1)));
+                                dimL+=dimoes.at(0).at(OppS(temps.at(0)))*dimoes.at(1).at(OppS(temps.at(1)));
+                                int dimR(dimoes.at(3).at(temps.at(3)));
+                                MatrixXd tempmat(dimL, dimR);
+                                tar._PMat.insert(pair<string, MatrixXd>(PR, tempmat));
+                                //cout<<PR<<"=>"<<dimL<<"x"<<dimR<<endl;
+                        }
+                        for(int ie=0; ie<_Dim.at(i).EDim; ++ie)
+                        {
+                                //for(int in=0; in<_Dim.at(i).NDim; ++in)
+                                //{
+                                        for(int is=0; is<_Dim.at(i).SDim; ++is)
+                                        {
+                                                for(int im=0; im<_Dim.at(i).MDim; ++im)
+                                                {
+                                                        int tarstartL, stastartR;
+                                                        if(temps.at(1)=="positive")
+                                                                stastartR=0;
+                                                        else stastartR=dimoes.at(1).at(OppS(temps.at(1)))*dimoes.at(3).at(OppS(temps.at(3)));
+                                                        if(temps.at(0)=="positive")
+                                                                tarstartL=0;
+                                                        else tarstartL=dimoes.at(0).at(OppS(temps.at(0)))*dimoes.at(1).at(OppS(temps.at(1)));
+                                                        //cout<<startL+is*_Dim.at(i).MDim+im<<endl<< startR+ie*_Dim.at(i).NDim+in<<endl;
+                                                        //cout<<tarstartL+is*_Dim.at(i).MDim+im<<"\t"<<ie<<"\t"<<is<<"\t"<<im*_Dim.at(i).EDim+ie<<endl;
+                                                        tar._PMat.at(PR)(tarstartL+is*_Dim.at(i).MDim+im,ie)=sta._PMat.at(staPR)(is, stastartR+im*_Dim.at(i).EDim+ie);
+                                                }
+                                        }
+                                //}
+                        }
+                }
+        } 
+}
+
+
+void QWave::dmgm(OP& tar, const OP& sta, const Parity& pari)const
+{
+        tar._PMat.clear();
+        tar._PDim.clear();
+        tar._PRL.clear();
+
+        int npari;
+        if(pari==Positive)npari=0;
+        else npari=1;
+        vector<unordered_map<string, int>> dimoes(DimOES());
+        for(int i=0; i<16; ++i)
+        {
+                vector<string> temps(n2s(i));
+                int nnpari((i/8+((i%8)%4)/2+((i%8)%4)%2)%2);
+                if(nnpari==npari)
+                {
+                        string PR(QAdd(temps.at(3), temps.at(2)));
+                        string PL(temps.at(0));
+                        string staPR(temps.at(3));
+                        auto it=tar._PRL.find(PR);
+                        if(it==tar._PRL.end())
+                               tar._PRL.insert(pair<string, string>(PR, PL));
+
+                        auto itt=tar._PMat.find(PR);
+                        if(itt==tar._PMat.end())
+                        {
+                                int dimL(dimoes.at(0).at(temps.at(0)));
+                                int dimR(dimoes.at(3).at(temps.at(3))*dimoes.at(2).at(temps.at(2)));
+                                dimR+=dimoes.at(3).at(OppS(temps.at(3)))*dimoes.at(2).at(OppS(temps.at(2)));
+                                MatrixXd tempmat(dimL, dimR);
+                                tar._PMat.insert(pair<string, MatrixXd>(PR, tempmat));
+                        }
+                        for(int ie=0; ie<_Dim.at(i).EDim; ++ie)
+                        {
+                                for(int in=0; in<_Dim.at(i).NDim; ++in)
+                                {
+                                        for(int is=0; is<_Dim.at(i).SDim; ++is)
+                                        {
+                                                //for(int im=0; im<_Dim.at(i).MDim; ++im)
+                                                //{
+                                                        int tarstartR, stastartL;
+                                                        if(temps.at(3)=="positive")
+                                                                tarstartR=0;
+                                                        else tarstartR=dimoes.at(3).at(OppS(temps.at(3)))*dimoes.at(2).at(OppS(temps.at(2)));
+                                                        if(temps.at(2)=="positive")
+                                                                stastartL=0;
+                                                        else stastartL=dimoes.at(2).at(OppS(temps.at(2)))*dimoes.at(0).at(OppS(temps.at(0)));
+                                                        //cout<<startL+is*_Dim.at(i).MDim+im<<endl<< startR+ie*_Dim.at(i).NDim+in<<endl;
+                                                        tar._PMat.at(PR)(is,tarstartR+ie*_Dim.at(i).NDim+in)=sta._PMat.at(staPR)(stastartL+in*_Dim.at(i).SDim+is, ie);
+                                                //}
+                                        }
+                                }
+                        }
+                }
+        } 
+}
+//==================================================================================
 
 //============================Reshape===================================
 /*void QWave::SMEN2Wave(const MatrixXd& A)

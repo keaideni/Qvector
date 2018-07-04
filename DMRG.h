@@ -7,6 +7,7 @@
 class DMRG
 {
         QWave InitWave;
+        OP InitOPWave;
         Sub Sys;
         Sub Env;
         Sub m;
@@ -29,7 +30,7 @@ public:
 
         DMRG(Parameter& para, const Parity& _pari);
 
-        //void Initialize(const int& dir, const int& Gdir, const int& OS, const int& OE);
+        void Initialize(const Parameter& para, const int& dir, const int& Gdir, int& OS, int & OE);
 
 
 

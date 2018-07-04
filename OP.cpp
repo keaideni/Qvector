@@ -437,6 +437,9 @@ const OP& OP::operator=(const OP& a)
 
 const OP& OP::time(const OP& a, const OP& b)
 {
+        _PDim.clear();
+        _PRL.clear();
+        _PMat.clear();
 	_PDim=(a._PDim);
 	
 	if(_PDim.at("positive")!=a._PDim.at("positive")|_PDim.at("negative")!=a._PDim.at("negative"))
@@ -459,8 +462,78 @@ const OP& OP::time(const OP& a, const OP& b)
 }
 
 
+const OP& OP::LWavetime2(const OP& a, const OP& b)
+{
+        _PRL.clear();
+        _PMat.clear();
+        _PDim.clear();
+	for(auto itb=b._PRL.begin(); itb!=b._PRL.end(); ++itb)
+	{
+	        for(auto ita=a._PRL.begin(); ita!=a._PRL.end(); ++ita)
+                {
+		        if(itb->second==ita->first)
+			_PMat.insert(pair<string, MatrixXd>(itb->first, a._PMat.at(ita->first)*b._PMat.at(itb->first)));
+
+		        _PRL.insert(pair<string, string>(itb->first, ita->second));
+                }
+	}
+	return *this;
+}
 
 
+
+const OP& OP::LWavetime(const OP& a, const OP& b)
+{
+        _PRL.clear();
+        _PMat.clear();
+        _PDim.clear();
+	for(auto itb=b._PRL.begin(); itb!=b._PRL.end(); ++itb)
+	{
+	        for(auto ita=a._PRL.begin(); ita!=a._PRL.end(); ++ita)
+                {
+		        if(itb->second==ita->second)
+			_PMat.insert(pair<string, MatrixXd>(itb->first, a._PMat.at(ita->first).transpose()*b._PMat.at(itb->first)));
+
+		        _PRL.insert(pair<string, string>(itb->first, ita->first));
+                }
+	}
+	return *this;
+}
+
+const OP& OP::RWavetime(const OP& a, const OP& b)
+{
+        _PDim.clear();
+        _PRL.clear();
+        _PMat.clear();
+	for(auto itb=b._PRL.begin(); itb!=b._PRL.end(); ++itb)
+	{
+		auto ita=a._PMat.find(b._PRL.at(itb->first));
+		if(ita!=a._PMat.end())
+		_PMat.insert(pair<string, MatrixXd>(itb->first, a._PMat.at(ita->first)*b._PMat.at(itb->first)));
+
+		_PRL.insert(pair<string, string>(itb->first, a._PRL.at(ita->first)));
+	}
+	return *this;
+}
+
+
+const OP& OP::RWavetime2(const OP& a, const OP& b)
+{
+        _PRL.clear();
+        _PMat.clear();
+        _PDim.clear();
+	for(auto itb=b._PRL.begin(); itb!=b._PRL.end(); ++itb)
+	{
+	        for(auto ita=a._PRL.begin(); ita!=a._PRL.end(); ++ita)
+                {
+		        if(itb->first==ita->first)
+			_PMat.insert(pair<string, MatrixXd>(itb->second,  a._PMat.at(ita->first)*b._PMat.at(itb->first).transpose()));
+
+		        _PRL.insert(pair<string, string>(itb->second, ita->second));
+                }
+	}
+	return *this;
+}
 
 
 const OP OP::operator*(const OP& a)const
@@ -544,7 +617,10 @@ void OP::TruncSave(const int& orbital)const
          outfile<<_PMat.size()<<endl;
 	for(auto it=_PMat.begin(); it!=_PMat.end();++it)
 	{
+
 		outfile<<it->first<<endl
+                        <<it->second.rows()<<endl
+                        <<it->second.cols()<<endl
 			<<it->second<<endl;
 	
 
@@ -597,6 +673,9 @@ void OP::read(ifstream& infile)
 
 void OP::TruncRead(const int& orbital)
 {
+        _PDim.clear();
+        _PRL.clear();
+        _PMat.clear();
         string filename("./trunc/");
         filename+=itos(orbital);
 
@@ -632,8 +711,10 @@ void OP::TruncRead(const int& orbital)
         for(int i=0; i<tempsize; ++i)
         {
                 infile>>Rname;
-                MatrixXd temp(MatrixXd::Zero( _PDim.at(_PRL.at(Rname)), _PDim.at(Rname)));
-
+                int temprow, tempcol;
+                infile>>temprow>>tempcol;
+                MatrixXd temp(MatrixXd::Zero(temprow, tempcol));
+                
                 for(int j=0; j<temp.rows(); ++j)
                 {
                  for(int k=0; k<temp.cols(); ++k)

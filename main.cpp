@@ -21,13 +21,13 @@ int main(void)
         <<" ,Jcr= "<<para.Jcr()<<" ,Energy= "<<haha.FEnergy()<<endl;
         outfile.close();
 
-        DMRG hehe(para, Negative);
+        //DMRG hehe(para, Negative);
 
-        outfile.open("./result/ResultN");
-        outfile.precision(20);
-        outfile<<"gr= "<<para.gr()<<" ,gcr= "<<para.gcr()<<" ,Jr= "<<para.Jr()
-        <<" ,Jcr= "<<para.Jcr()<<" ,Energy= "<<hehe.FEnergy()<<endl;
-        outfile.close();
+        //outfile.open("./result/ResultN");
+        //outfile.precision(20);
+        //outfile<<"gr= "<<para.gr()<<" ,gcr= "<<para.gcr()<<" ,Jr= "<<para.Jr()
+        //<<" ,Jcr= "<<para.Jcr()<<" ,Energy= "<<hehe.FEnergy()<<endl;
+        //outfile.close();
         /*<<" ,ExcitedEnergy= "<<haha.Excited()<<" ,Entropy= "
         <<haha.Entropy()<<endl<<" ,AParticleNo= "<<ParticleNo(para)<<" ,SigmaParticleNo= "
 	<<SigmaParticleNo(para)<<" ,<A>= "<<OrderParameter(para)
