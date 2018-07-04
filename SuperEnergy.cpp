@@ -65,10 +65,9 @@ SuperEnergy::SuperEnergy(Parameter&para,Super& sup, const Parity& pari, const QW
                 int a(6);
                 if(sup.Dim < 6)a=4;
                 SymEigsSolver<double, SMALLEST_ALGE, Super> eigs(&sup, 1, a);
-                eigs.init(pt);
                 time_t start, end;
                 time(&start);
-                eigs.init();
+                eigs.init(pt);
                 eigs.compute(10000);
                 time(&end);
                 cout<<"The calculation takes "<<end-start<<"s."<<endl;

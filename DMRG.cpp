@@ -114,8 +114,8 @@ void DMRG::BuildUp(Parameter& para, int& OS, int& OE)
                 Sub EnvNew(para, Env, n, OE-1);
                 EnvNew.Trunc(MatrixV);
 
-                EnvNew.SysEye().show();
-                MatrixV.show();
+                //EnvNew.SysEye().show();
+                //MatrixV.show();
 
                 EnvNew.Save();
                 MatrixV.TruncSave(EnvNew.Orbital());
@@ -149,7 +149,7 @@ void DMRG::Sweep(Parameter& para, int& OS, int& OE)
         bool stop(false);
         
 
-        while(true)//!stop)
+        while(!stop)
         {
                 m.ChangeOrbital(OS+dir); n.ChangeOrbital(OE+dir);
                 if(OE==para.LatticeSize()|OS==1)
@@ -170,7 +170,7 @@ void DMRG::Sweep(Parameter& para, int& OS, int& OE)
                         err=abs(para.Energy-_FEnergy);SaveAll<<err<<endl;
                         _FEnergy=para.Energy;
                         Gdir*=-1;
-                        stop=(err<1e-10);
+                        stop=(err<1e-6);
 
                         if(!stop)
                         cout<<"==========the "<<SweepNo<<"th sweeps=============="<<endl;
@@ -205,7 +205,7 @@ void DMRG::CalcuEnergy(Parameter& para, int& OS, int& OE, const int& dir, const 
         //SaveAll<<"The process of constructing Super takes "<<(end-start)<<"s."<<endl;
         
         time(&start);
-        SuperEnergy Supp(para, Sup, pari);
+        SuperEnergy Supp(para, Sup, pari, InitWave);
        
         //==============to save the final wave=======================
         if((OS==(para.LatticeSize()/2-1)&dir==1)|(OE==(para.LatticeSize()/2+2)&dir==-1))
@@ -243,8 +243,8 @@ void DMRG::CalcuEnergy(Parameter& para, int& OS, int& OE, const int& dir, const 
                         SysNew.Trunc(matrixT);
                         SysNew.Save();
                         matrixT.TruncSave(SysNew.Orbital());
-                        cout<<"haha"<<endl;
                         InitOPWave.LWavetime(matrixT, wave);
+                        //cout<<"haha"<<endl;
                 }else
                 {
                         
@@ -316,7 +316,7 @@ void DMRG::Initialize(const Parameter& para, const int& dir, const int& Gdir, in
                         //Sys.SysEye().show();
                         Sys.Read(OS);
                         QWave temp(Sys, haha, haha, Env);
-                        InitOPWave.show();
+                        //InitOPWave.show();
                         //Env.SysEye().show();
                         //Sys.SysEye().show();
                         //exit(true);
@@ -327,8 +327,9 @@ void DMRG::Initialize(const Parameter& para, const int& dir, const int& Gdir, in
                         OE+=dir;
                         Env.Read(OE);
 
-                        QWave NewInitWave;
+                        QWave NewInitWave(Sys, haha, haha, Env);
                         NewInitWave.NSME2Wave(InitOPWave, pari);
+                        //cout<<"haha"<<endl;
                         InitWave=NewInitWave;
                         //exit(true);
                 }else
@@ -371,10 +372,10 @@ void DMRG::Initialize(const Parameter& para, const int& dir, const int& Gdir, in
                         //exit(true);
                         temp.d1gm(tempOPWave, InitOPWave, pari);
                         OP tempOPE;
-                        cout<<"haha"<<OE<<endl;
+                        //cout<<"haha"<<OE<<endl;
                         tempOPE.TruncRead(OE);
-                        tempOPWave.show();
-                        tempOPE.show();
+                        //tempOPWave.show();
+                        //tempOPE.show();
                         InitOPWave.RWavetime2(tempOPWave, tempOPE);
                         
                         OE+=dir;

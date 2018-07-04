@@ -13,7 +13,7 @@ int main(void)
         //test(para);
 
 
-        DMRG haha(para, Positive);
+        DMRG haha(para, Negative);
 
         ofstream outfile("./result/ResultP");
         outfile.precision(20);
