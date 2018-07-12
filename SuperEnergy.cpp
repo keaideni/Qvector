@@ -10,92 +10,80 @@
 using namespace std;
 SuperEnergy::SuperEnergy(Parameter&para,Super& sup, const Parity& pari):
 wave(sup.Wave())
-        {
+{
                 
-                int a(6);
-                if(sup.Dim < 6)a=4;
-                SymEigsSolver<double, SMALLEST_ALGE, Super> eigs(&sup, 1, a);
-                time_t start, end;
+        int a(6);
+        if(sup.Dim < 6)a=4;
+        SymEigsSolver<double, SMALLEST_ALGE, Super> eigs(&sup, 1, a);
+        time_t start, end;
+        time(&start);
+        eigs.init();
+        eigs.compute(10000);
+        time(&end);
+        cout<<"The calculation takes "<<end-start<<"s."<<endl;
+        if (eigs.info() == SUCCESSFUL)
+        {
+
+                vector<double> f;double sum(0);
                 time(&start);
-                eigs.init();
-                eigs.compute(10000);
-                time(&end);
-                cout<<"The calculation takes "<<end-start<<"s."<<endl;
-                if (eigs.info() == SUCCESSFUL)
+
+                VectorXd tempvec(eigs.eigenvectors(1));//Here is the must steps, if use eigs directly, the process will take lots of time;
+                for(int i=0; i<tempvec.size(); ++i)
                 {
-			//if(eigs.eigenvalues()(0)<eigs.eigenvalues()(1))
-			//{
+                        f.push_back(tempvec(i));
+                }
+                time(&end);
 
-                        vector<double> f;double sum(0);
-                        time(&start);
-
-                        VectorXd tempvec(eigs.eigenvectors(1));//Here is the must steps, if use eigs directly, the process will take lots of time;
-                        for(int i=0; i<tempvec.size(); ++i)
-                        {
-                                f.push_back(tempvec(i));
-                        }
-                        time(&end);
-
-				wave.f2Wave(f, pari);
+		wave.f2Wave(f, pari);
                               
                                         
                           
-			//}else
-			//{
-				//wave.f2Wave(eigs.eigenvectors(2).col(1));
-			//}
-                        para.Energy = eigs.eigenvalues()(0);
-                        //_excited= eigs.eigenvalues()(0)>eigs.eigenvalues()(1)?eigs.eigenvalues()(0):eigs.eigenvalues()(1);
+                para.Energy = eigs.eigenvalues()(0);
 		
-                        //std::cout << eigs.num_iterations() << std::endl;
-                }
-                cout<<"The values copy takes "<<end-start<<"s."<<endl;
-
-                
+                //std::cout << eigs.num_iterations() << std::endl;
         }
+        cout<<"The values copy takes "<<end-start<<"s."<<endl;
+
+                
+}
 SuperEnergy::SuperEnergy(Parameter&para,Super& sup, const Parity& pari, const QWave& initwave):
-        wave(sup.Wave())
+wave(sup.Wave())
+{
+        
+        std::vector<double> f;
+        initwave.Wave2f(f, pari);
+        double *pt = new double [sup.Dim];
+        for(int i = 0; i < sup.Dim; ++i)pt[i] = f.at(i);
+                
+        int a(6);
+        if(sup.Dim < 6)a=4;
+        SymEigsSolver<double, SMALLEST_ALGE, Super> eigs(&sup, 1, a);
+        time_t start, end;
+        time(&start);
+        eigs.init(pt);
+        eigs.compute(10000);
+        time(&end);
+        cout<<"The calculation takes "<<end-start<<"s."<<endl;
+        if (eigs.info() == SUCCESSFUL)
         {
-                
-                std::vector<double> f;
-                initwave.Wave2f(f, pari);
-                double *pt = new double [sup.Dim];
-                for(int i = 0; i < sup.Dim; ++i)pt[i] = f.at(i);
-                
-                int a(6);
-                if(sup.Dim < 6)a=4;
-                SymEigsSolver<double, SMALLEST_ALGE, Super> eigs(&sup, 1, a);
-                time_t start, end;
+		vector<double> f;double sum(0);
                 time(&start);
-                eigs.init(pt);
-                eigs.compute(10000);
-                time(&end);
-                cout<<"The calculation takes "<<end-start<<"s."<<endl;
-                if (eigs.info() == SUCCESSFUL)
+
+                VectorXd tempvec(eigs.eigenvectors(1));//Here is the must steps, if use eigs directly, the process will take lots of time;
+                for(int i=0; i<tempvec.size(); ++i)
                 {
-			 vector<double> f;double sum(0);
-                        time(&start);
+                        f.push_back(tempvec(i));
+                }
+                time(&end);
 
-                        VectorXd tempvec(eigs.eigenvectors(1));//Here is the must steps, if use eigs directly, the process will take lots of time;
-                        for(int i=0; i<tempvec.size(); ++i)
-                        {
-                                f.push_back(tempvec(i));
-                        }
-                        time(&end);
-
-				wave.f2Wave(f, pari);
+		wave.f2Wave(f, pari);
                               
                                         
                           
-			//}else
-			//{
-				//wave.f2Wave(eigs.eigenvectors(2).col(1));
-			//}
-                        para.Energy = eigs.eigenvalues()(0);
-                        //_excited= eigs.eigenvalues()(0)>eigs.eigenvalues()(1)?eigs.eigenvalues()(0):eigs.eigenvalues()(1);
-                }
-                cout<<"The values copy takes "<<end-start<<"s."<<endl;
+                para.Energy = eigs.eigenvalues()(0);
+        }
+        cout<<"The values copy takes "<<end-start<<"s."<<endl;
 
                 
-        };
+};
 

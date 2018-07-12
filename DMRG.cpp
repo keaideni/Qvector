@@ -30,9 +30,9 @@ pari(_pari)
 
         cout<<"===================The growth process:==================="<<endl;
         SaveAll<<"===================The growth process:==================="<<endl;
-        //Parameter paraup;
-        //paraup.ChangeD(40);
-        BuildUp(para, OS, OE);
+        Parameter paraup;
+        paraup.ChangeD(40);
+        BuildUp(paraup, OS, OE);
         cout<<"===================The sweep process:==================="<<endl;
         SaveAll<<"===================The sweep process:==================="<<endl;
 
@@ -212,7 +212,10 @@ void DMRG::CalcuEnergy(Parameter& para, int& OS, int& OE, const int& dir, const 
         {
                 OP finalwave;
                 Supp.wave.Wave2SMEN(finalwave, pari);
+                //if(pari==Positive)
                 finalwave.TruncSave(10000);//The file "/Trunc/10000" is the final wave.
+                //else
+                //finalwave.TruncSave(10001);
         }
          //SuperEnergy Supp(para, Sup, pari, InitWave);
 
