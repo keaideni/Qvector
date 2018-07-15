@@ -400,6 +400,35 @@ const OP& OP::add(const OP& a)
 	
 }
 
+const int OP::trace()const
+{
+        double temp(0);
+        for(auto it=_PMat.begin(); it!=_PMat.end(); ++it)
+        {
+                temp+=it->second.trace();
+        }
+
+        return temp;
+}
+
+
+const OP OP::adjoint()const
+{
+        OP temp;
+
+        temp._PDim=(*this)._PDim;
+
+        for(auto it=_PRL.begin(); it!=_PRL.end(); ++it)
+        {
+                temp._PRL.insert(pair<string, string>(it->first, it->second));
+
+                auto itt=_PMat.find(it->first);
+                if(itt!=_PMat.end())
+                        temp._PMat.insert(pair<string, MatrixXd>(it->second, itt->second));
+        }
+
+        return temp;
+}
 
 const OP OP::operator+(const OP& a)const
 {

@@ -80,7 +80,9 @@ public:
 	const OP& Kron(const OP& a, const OP& b);
 
 	const OP& add(const OP& a);
-
+        
+        const int trace()const;
+        const OP adjoint()const;
 	const OP operator+(const OP& a)const;
 	const OP& operator=(const OP& a);
 	const OP& time(const OP& a, const OP& b);

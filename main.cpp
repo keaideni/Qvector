@@ -1,6 +1,6 @@
 #include "DMRG.h"
 //#include "test.h"
-//#include "Calcu.h"
+#include "Calcu.h"
 
 
 //int Sub::nmax;
@@ -13,13 +13,13 @@ int main(void)
         //test(para);
 
 
-        DMRG haha(para, Negative);
+        //DMRG haha(para, Negative);
 
-        ofstream outfile("./result/ResultP");
+        /*ofstream outfile("./result/ResultP");
         outfile.precision(20);
         outfile<<"gr= "<<para.gr()<<" ,gcr= "<<para.gcr()<<" ,Jr= "<<para.Jr()
         <<" ,Jcr= "<<para.Jcr()<<" ,Energy= "<<haha.FEnergy()<<endl;
-        outfile.close();
+        outfile.close();*/
 
         //DMRG hehe(para, Negative);
 
@@ -33,9 +33,11 @@ int main(void)
 	<<SigmaParticleNo(para)<<" ,<A>= "<<OrderParameter(para)
 	<<" ,SecondCorrelation= "<<secondcorrelation(para)
 	<<" ,Parity= "<<Parity(para)<<endl;*/
-	/*std::cout<<"gr= "<<para.gr()<<" ,gcr= "<<para.gcr()<<" ,Jr= "<<para.Jr()
-        <<" ,Jcr= "<<para.Jcr()<<" ,AParticleNo= "<<ParticleNo(para)
-	<<" ,SigmaParticleNo= "<<SigmaParticleNo(para)<<" ,<A>= "<<OrderParameter(para)
+        ofstream outfile1("./result/ParticleP");
+	std::cout<<"gr= "<<para.gr()<<" ,gcr= "<<para.gcr()<<" ,Jr= "<<para.Jr()
+        <<" ,Jcr= "<<para.Jcr()<<" ,AParticleNo= "<<ParticleNo(para, outfile1);
+        outfile1.close();
+	/*<<" ,SigmaParticleNo= "<<SigmaParticleNo(para)<<" ,<A>= "<<OrderParameter(para)
 	<<" ,SecondCorrelation= "<<secondcorrelation(para)
 	<<" ,Parity= "<<Parity(para)<<endl;*/
 
