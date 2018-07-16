@@ -22,7 +22,7 @@ LIBSPECTRA = -I/home/keaideni/WORK/Lib/spectra/include/ -I/home/keaideni/WORK/Li
 obj=main.o OP.o SOP.o Sub.o QWave.o SuperEnergy.o DMRG.o
 main:$(obj)
 	$(CCCOM) -o main $(obj)  $(LIBSPECTRA)
-main.o:main.cpp  test.h SingleSub.h #DMRG.h Calcu.h
+main.o:main.cpp  test.h SingleSub.h DMRG.h Calcu.h
 	$(CCCOM) -c main.cpp -O2 $(LIBSPECTRA)
 OP.o:OP.cpp OP.h
 	$(CCCOM) -c OP.cpp -O2 $(LIBSPECTRA)

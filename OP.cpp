@@ -402,6 +402,13 @@ const OP& OP::add(const OP& a)
 
 const int OP::trace()const
 {
+        for(auto it=_PRL.begin(); it!=_PRL.end(); ++it)
+        {
+                if(it->first!=it->second)
+                {
+                        return 0;
+                }
+        }
         double temp(0);
         for(auto it=_PMat.begin(); it!=_PMat.end(); ++it)
         {
@@ -563,6 +570,45 @@ const OP& OP::RWavetime2(const OP& a, const OP& b)
 	}
 	return *this;
 }
+
+
+const int OP::AverageL(const OP& wave, const OP& a)
+{
+        _PRL.clear();
+        _PMat.clear();
+        _PDim.clear();
+	for(auto itwave=wave._PRL.begin(); itwave!=wave._PRL.end(); ++itwave)
+	{
+	        for(auto ita=a._PRL.begin(); ita!=a._PRL.end(); ++ita)
+                {
+		        if(itwave->second==ita->first)
+			_PMat.insert(pair<string, MatrixXd>(itwave->first, wave._PMat.at(ita->second).adjoint()*a._PMat.at(ita->first)*wave._PMat.at(itwave->first)));
+
+		        _PRL.insert(pair<string, string>(itwave->first, wave._PRL.at(ita->second)));
+                }
+	}
+	return trace();
+}
+
+const int OP::AverageR(const OP& wave, const OP& a)
+{
+        _PRL.clear();
+        _PMat.clear();
+        _PDim.clear();
+	for(auto itwave=wave._PRL.begin(); itwave!=wave._PRL.end(); ++itwave)
+	{
+	        for(auto ita=a._PRL.begin(); ita!=a._PRL.end(); ++ita)
+                {
+		        if(itwave->first==ita->first)
+			_PMat.insert(pair<string, MatrixXd>(itwave->second, wave._PMat.at(ita->second)*a._PMat.at(ita->first)*wave._PMat.at(itwave->first).adjoint()));
+
+		        _PRL.insert(pair<string, string>(itwave->second, wave._PRL.at(ita->second)));
+                }
+	}
+	return trace();
+}
+
+
 
 
 const OP OP::operator*(const OP& a)const

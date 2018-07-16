@@ -97,6 +97,8 @@ public:
         const OP& RWavetime2(const OP& wave, const OP& a);
         //To calculate TruncU*wave. left |z> to |xy>.
         const OP& LWavetime2(const OP& wave, const OP& a);
+        const int AverageL(const OP& wave, const OP& a);
+        const int AverageR(const OP& wave, const OP& a);
 
 	
 	void save(ofstream& outfile)const;

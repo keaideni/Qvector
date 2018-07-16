@@ -21,7 +21,7 @@ double ParticleNo(const Parameter& para, ofstream& outfile)
                         if(i==para.LatticeSize()/2)continue;
                         OP tempTrunc;
                         tempTrunc.TruncRead(i);
-                        ParticleMat.at(j)=tempTrunc.adjoint()*ParticleMat.at(j)*tempTrunc;
+                        ParticleMat.at(j).TruncU(tempTrunc);
 
                 }
                 Sys.Read(i-1);
@@ -31,7 +31,7 @@ double ParticleNo(const Parameter& para, ofstream& outfile)
                 if(i==para.LatticeSize()/2)break;
                 OP tempTrunc;
                 tempTrunc.TruncRead(i);
-                ParticleMat.at(i-1)=tempTrunc.adjoint()*ParticleMat.at(i-1)*tempTrunc;
+                ParticleMat.at(i-1).TruncU(tempTrunc);
         }
         ParticleMat.push_back(m.SysAdag()*m.SysA());
         for(int i=2; i<=para.LatticeSize()/2; ++i)
@@ -43,8 +43,7 @@ double ParticleNo(const Parameter& para, ofstream& outfile)
                         OP tempTrunc;
                         if(i==para.LatticeSize()/2)continue;
                         tempTrunc.TruncRead(para.LatticeSize()-i+1);
-                        ParticleMat.at(para.LatticeSize()/2+j)
-                        =tempTrunc.adjoint()*ParticleMat.at(para.LatticeSize()/2+j)*tempTrunc;
+                        ParticleMat.at(para.LatticeSize()/2+j).TruncU(tempTrunc);
 
                 }
                 Sys.Read(para.LatticeSize()+2-i);
@@ -54,8 +53,7 @@ double ParticleNo(const Parameter& para, ofstream& outfile)
                 if(i==para.LatticeSize()/2)break;
                 OP tempTrunc;
                 tempTrunc.TruncRead(para.LatticeSize()-i+1);
-                ParticleMat.at(para.LatticeSize()/2+i-1)
-                =tempTrunc.adjoint()*ParticleMat.at(para.LatticeSize()/2+i-1)*tempTrunc;
+                ParticleMat.at(para.LatticeSize()/2+i-1).TruncU(tempTrunc);
         }
 
 
@@ -67,10 +65,12 @@ double ParticleNo(const Parameter& para, ofstream& outfile)
         vector<double> Particle;
         for(int i=0; i<para.LatticeSize()/2; ++i)
         {
-                Particle.push_back((wave.adjoint()*ParticleMat.at(i)*wave).trace());
+                OP tempaverage;
+                Particle.push_back(tempaverage.AverageL(wave, ParticleMat.at(i)));
         }for(int i=para.LatticeSize()/2; i<para.LatticeSize(); ++i)
         {
-                Particle.push_back((wave*(ParticleMat.at(i)).adjoint()*wave.adjoint()).trace());
+                OP tempaverage;
+                Particle.push_back(tempaverage.AverageR(wave, ParticleMat.at(i)));
         }
         //ofstream outfile("./result/ParticleNo");
         outfile.precision(20);
@@ -430,5 +430,8 @@ double Parity(const Parameter& para)
 
 
 }*/
+
+
+
 
 #endif // CALCU_H
