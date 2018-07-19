@@ -81,7 +81,7 @@ public:
 
 	const OP& add(const OP& a);
         
-        const int trace()const;
+        const double trace()const;
         const OP adjoint()const;
 	const OP operator+(const OP& a)const;
 	const OP& operator=(const OP& a);
@@ -97,8 +97,9 @@ public:
         const OP& RWavetime2(const OP& wave, const OP& a);
         //To calculate TruncU*wave. left |z> to |xy>.
         const OP& LWavetime2(const OP& wave, const OP& a);
-        const int AverageL(const OP& wave, const OP& a);
-        const int AverageR(const OP& wave, const OP& a);
+        const double AverageL(const OP& wave, const OP& a);
+        const double AverageR(const OP& wave, const OP& a);
+        const double Average(const OP& wave, const OP& OS, const OP& OE);
 
 	
 	void save(ofstream& outfile)const;

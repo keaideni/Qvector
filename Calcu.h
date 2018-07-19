@@ -89,35 +89,38 @@ double ParticleNo(const Parameter& para, ofstream& outfile)
 
 
 
-/*double SigmaParticleNo(const Parameter& para);
-double SigmaParticleNo(const Parameter& para)
+double SigmaParticleNo(const Parameter& para, ofstream& outfile);
+double SigmaParticleNo(const Parameter& para, ofstream& outfile)
 {
 			
 	Sub Sys, m(para, 1);
-	Matrix2d tempsigma;
-	tempsigma<<0,0,0,1;
-	MatrixXd tempeye(MatrixXd::Identity(m.nmax+1, m.nmax+1));
-	MatrixXd Sigma(Kron(tempeye, tempsigma));
+	OP tempsigmaP(para, SigmaP), tempSigmaM(para, SigmaM);
+        OP tempsigma(tempsigmaP*tempSigmaM);
+        OP tempeye(para, Iden);
+
+	OP Sigma(tempeye, tempsigma);
 
 
-	vector<MatrixXd> SigmaParticleMat;
+	vector<OP> SigmaParticleMat;
 	SigmaParticleMat.push_back(Sigma);
 	for(int i=2; i<=para.LatticeSize()/2; ++i)
 	{
 		for(int j=0; j<i-1; ++j)
 		{
-			SigmaParticleMat.at(j)=Kron(SigmaParticleMat.at(j), m.SysEye());
+                        OP tempMat1(SigmaParticleMat.at(j), m.SysEye());
+			SigmaParticleMat.at(j)=tempMat1;
 			if(i==para.LatticeSize()/2)continue;
-			MatrixXd tempTrunc;
-			ReadTruncM(tempTrunc, i);
-			SigmaParticleMat.at(j)=tempTrunc.adjoint()*SigmaParticleMat.at(j)*tempTrunc;
+			OP tempTrunc;
+			tempTrunc.TruncRead(i);
+			SigmaParticleMat.at(j).TruncU(tempTrunc);
 		}
 		Sys.Read(i-1);
-		SigmaParticleMat.push_back(Kron(Sys.SysEye(), Sigma));
+                OP temppp(Sys.SysEye(), Sigma);
+		SigmaParticleMat.push_back(temppp);
 		if(i==para.LatticeSize()/2)break;
-		MatrixXd tempTrunc;
-		ReadTruncM(tempTrunc, i);
-		SigmaParticleMat.at(i-1)=tempTrunc.adjoint()*SigmaParticleMat.at(i-1)*tempTrunc;
+		OP tempTrunc;
+		tempTrunc.TruncRead(i);
+		SigmaParticleMat.at(i-1).TruncU(tempTrunc);
 
 	}
 	SigmaParticleMat.push_back(Sigma);
@@ -126,43 +129,43 @@ double SigmaParticleNo(const Parameter& para)
 
 		for(int j=0; j<i-1; ++j)
 		{
+                        OP tempppp(SigmaParticleMat.at(para.LatticeSize()/2+j), m.SysEye());
 							
-			SigmaParticleMat.at(para.LatticeSize()/2+j)=
-				Kron(SigmaParticleMat.at(para.LatticeSize()/2+j), m.SysEye());
+			SigmaParticleMat.at(para.LatticeSize()/2+j)=tempppp;
+				
 			if(i==para.LatticeSize()/2)continue;
-			MatrixXd tempTrunc;
-			ReadTruncM(tempTrunc, para.LatticeSize()-i+1);
-			SigmaParticleMat.at(para.LatticeSize()/2+j)=
-			tempTrunc.adjoint()*SigmaParticleMat.at(para.LatticeSize()/2+j)*tempTrunc;
+			OP tempTrunc;
+			tempTrunc.TruncRead(para.LatticeSize()-i+1);
+			SigmaParticleMat.at(para.LatticeSize()/2+j).TruncU(tempTrunc);
 
 		}
 		Sys.Read(para.LatticeSize()+2-i);
-		SigmaParticleMat.push_back(Kron(Sys.SysEye(), Sigma));
+                OP tempMat2(Sys.SysEye(), Sigma);
+		SigmaParticleMat.push_back(tempMat2);
 		if(i==para.LatticeSize()/2)break;
-		MatrixXd tempTrunc;
-		ReadTruncM(tempTrunc, para.LatticeSize()-i+1);
-		SigmaParticleMat.at(para.LatticeSize()/2+i-1)
-		=tempTrunc.adjoint()*SigmaParticleMat.at(para.LatticeSize()/2+i-1)*tempTrunc;
+		OP tempTrunc;
+		tempTrunc.TruncRead(para.LatticeSize()-i+1);
+		SigmaParticleMat.at(para.LatticeSize()/2+i-1).TruncU(tempTrunc);
 	}
 
-        MatrixXd wave;
-        ReadTruncM(wave, 10000);
+        OP wave;
+        wave.TruncRead(10000);
 
         vector<double> SigmaParticle;
         for(int i=0; i<para.LatticeSize()/2; ++i)
         {
-                SigmaParticle.push_back((wave.adjoint()*SigmaParticleMat.at(i)*wave).trace());
+                OP tempaverage;
+                SigmaParticle.push_back(tempaverage.AverageL(wave, SigmaParticleMat.at(i)));
         }for(int i=para.LatticeSize()/2; i<para.LatticeSize(); ++i)
         {
-                SigmaParticle.push_back
-			((wave*(SigmaParticleMat.at(i)).transpose()*wave.adjoint()).trace());
+                OP tempaverage;
+                SigmaParticle.push_back(tempaverage.AverageR(wave, SigmaParticleMat.at(i)));
         }
-        ofstream outfile("./result/SigmaParticleNo");outfile.precision(20);
+        outfile.precision(20);
         for(int i=0; i<para.LatticeSize(); ++i)
         {
                 outfile<<"i= "<<(i+1)<<" ,ParticleNo= "<<SigmaParticle.at(i)<<endl;
         }
-        outfile.close();
 
         return SigmaParticle.at(para.LatticeSize()/2);
 }
@@ -171,7 +174,7 @@ double SigmaParticleNo(const Parameter& para)
 
 
 
-double OrderParameter(const Parameter& para);
+/*double OrderParameter(const Parameter& para);
 double OrderParameter(const Parameter& para)
 {
         Sub Sys, m(para,1);
@@ -243,113 +246,133 @@ double OrderParameter(const Parameter& para)
         return OrderNo.at(para.LatticeSize()/2);
 }
 
-void Correlation(const Parameter& para);
-void Correlation(const Parameter& para)
+
+
+
+*/
+void Correlation(const Parameter& para, ofstream& outfile);
+void Correlation(const Parameter& para, ofstream& outfile)
 {
         Sub m(para, 0);
-        vector<MatrixXd> CorrMat;
-        MatrixXd Adag1(m.SysAdag());
+        vector<OP> CorrMat;
+        OP Adag1(m.SysAdag());
 
         CorrMat.push_back(m.SysAdag()*m.SysA());
         for(int i=2; i<=para.LatticeSize()/2; ++i)
         {
                 for(int j=0; j<i-1; ++j)
                 {
-                        CorrMat.at(j)=Kron(CorrMat.at(j), m.SysEye());
+                        OP tempmat(CorrMat.at(j), m.SysEye());
+                        CorrMat.at(j)=tempmat;
                         
                         if(i==para.LatticeSize()/2)continue;
                         
-                        MatrixXd tempTrunc;
-                        ReadTruncM(tempTrunc, i);
-                        CorrMat.at(j)=tempTrunc.adjoint()*CorrMat.at(j)*tempTrunc;
+                        OP tempTrunc;
+                        tempTrunc.TruncRead(i);
+                        CorrMat.at(j).TruncU(tempTrunc);
                         
                 }
-                CorrMat.push_back(Kron(Adag1, m.SysA()));
-                Adag1=Kron(Adag1, m.SysEye());
+                OP tempMat1(Adag1, m.SysA());
+                CorrMat.push_back(tempMat1);
+                OP tempAdag1(Adag1, m.SysEye());
+                Adag1=tempAdag1;
                 if(i==para.LatticeSize()/2)continue;
-                MatrixXd tempTrunc;
-                ReadTruncM(tempTrunc, i);
-                CorrMat.at(i-1)=tempTrunc.adjoint()*CorrMat.at(i-1)*tempTrunc;
-                Adag1=tempTrunc.adjoint()*Adag1*tempTrunc;
+                OP tempTrunc;
+                tempTrunc.TruncRead(i);
+                CorrMat.at(i-1).TruncU(tempTrunc);
+                Adag1.TruncU(tempTrunc);
         }
 
         vector<double> Corr;
-        MatrixXd wave;
-        ReadTruncM(wave, 10000);
+        OP wave;
+        wave.TruncRead(10000);
         for(int i=0; i<para.LatticeSize()/2; ++i)
         {
-                Corr.push_back((wave.transpose()*CorrMat.at(i)*wave).trace());
+                OP tempaverage;
+                Corr.push_back(tempaverage.AverageL(wave, CorrMat.at(i)));
         }
         Sub Sys;
         Sys.Read(para.LatticeSize()/2+2);
-        MatrixXd A(Kron(Sys.SysA1(), m.SysEye()));
-        Corr.push_back((wave.adjoint()*Adag1*wave*A.transpose()).trace());
+        OP A(Sys.SysA1(), m.SysEye());
 
-        ofstream outfile("./result/Correlation");
+        OP averagemat;
+        Corr.push_back(averagemat.Average(wave, Adag1, A));
+
+        //ofstream outfile("./result/Correlation");
         for(int i=0; i<Corr.size(); ++i)
         {
                 outfile<<"R= "<<i<<" ,Corr(R)= "<<Corr.at(i)<<endl;
         }
-        outfile.close();
+        //outfile.close();
 }
 
 
 
-void SigmaCorrelation(const Parameter& para);
-void SigmaCorrelation(const Parameter& para)
+void SigmaCorrelation(const Parameter& para, ofstream& outfile);
+void SigmaCorrelation(const Parameter& para, ofstream& outfile)
 {
         Sub m(para, 0);
-        vector<MatrixXd> CorrMat;
-	Matrix2d tempsigmaplu, tempsigmamin;
-	tempsigmaplu<<0,0,1,0;        tempsigmamin<<0,1,0,0;
-	MatrixXd tempeye(MatrixXd::Identity(m.nmax+1, m.nmax+1));
-        MatrixXd Adag1(Kron(tempeye, tempsigmaplu)), A(Kron(tempeye, tempsigmamin));
+        vector<OP> CorrMat;
+	OP tempsigmaplu(para, SigmaP ), tempsigmamin(para, SigmaM);
+	
+        OP tempeye(para, Iden);
+        OP Adag1(tempeye, tempsigmaplu), A(tempeye, tempsigmamin);
 
         CorrMat.push_back(Adag1*A);
         for(int i=2; i<=para.LatticeSize()/2; ++i)
         {
                 for(int j=0; j<i-1; ++j)
                 {
-                        CorrMat.at(j)=Kron(CorrMat.at(j), m.SysEye());
+                        OP tempMat(CorrMat.at(j), m.SysEye());
+                        CorrMat.at(j)=tempMat;
                         
                         if(i==para.LatticeSize()/2)continue;
                         
-                        MatrixXd tempTrunc;
-                        ReadTruncM(tempTrunc, i);
-                        CorrMat.at(j)=tempTrunc.adjoint()*CorrMat.at(j)*tempTrunc;
+                        OP tempTrunc;
+                        tempTrunc.TruncRead(i);
+                        CorrMat.at(j).TruncU(tempTrunc);
                         
                 }
-                CorrMat.push_back(Kron(Adag1, A));
-                Adag1=Kron(Adag1, m.SysEye());
+                OP tempMat1(Adag1, A);
+                CorrMat.push_back(tempMat1);
+
+                OP tempMat2(Adag1, m.SysEye());
+                Adag1=tempMat2;
                 if(i==para.LatticeSize()/2)continue;
-                MatrixXd tempTrunc;
-                ReadTruncM(tempTrunc, i);
-                CorrMat.at(i-1)=tempTrunc.adjoint()*CorrMat.at(i-1)*tempTrunc;
-                Adag1=tempTrunc.adjoint()*Adag1*tempTrunc;
+                OP tempTrunc;
+                tempTrunc.TruncRead(i);
+                CorrMat.at(i-1).TruncU(tempTrunc);
+                Adag1.TruncU(tempTrunc);
         }
 
         vector<double> Corr;
-        MatrixXd wave;
-        ReadTruncM(wave, 10000);
+        OP wave;
+        wave.TruncRead(10000);
         for(int i=0; i<para.LatticeSize()/2; ++i)
         {
-                Corr.push_back((wave.transpose()*CorrMat.at(i)*wave).trace());
+                OP tempaverage;
+                Corr.push_back(tempaverage.AverageL(wave, CorrMat.at(i)));
         }
         Sub Sys;
         Sys.Read(para.LatticeSize()/2+2);
-        MatrixXd A1(Kron(Sys.SysA1(), m.SysEye()));
-        Corr.push_back((wave.adjoint()*Adag1*wave*A1.transpose()).trace());
+        OP A1(Sys.SysA1(), m.SysEye());
+        
+        OP averagemat;
+        Corr.push_back(averagemat.Average(wave, Adag1, A1));
 
-        ofstream outfile("./result/SigmaCorrelation");
+
+        //Corr.push_back((wave.adjoint()*Adag1*wave*A1.transpose()).trace());
+
+        //ofstream outfile("./result/SigmaCorrelation");
         for(int i=0; i<Corr.size(); ++i)
         {
                 outfile<<"R= "<<i<<" ,Corr(R)= "<<Corr.at(i)<<endl;
         }
-        outfile.close();
+        //outfile.close();
 }
 
 
-
+/*
 MatrixXd Kron(const MatrixXd& a, const MatrixXd& b)
 {
         MatrixXd ab(MatrixXd::Zero(a.rows()*b.rows(),a.cols()*b.cols()));

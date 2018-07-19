@@ -13,7 +13,7 @@ int main(void)
         //test(para);
 
 
-        //DMRG haha(para, Negative);
+        //DMRG haha(para, Positive);
 
         /*ofstream outfile("./result/ResultP");
         outfile.precision(20);
@@ -35,8 +35,21 @@ int main(void)
 	<<" ,Parity= "<<Parity(para)<<endl;*/
         ofstream outfile1("./result/ParticleP");
 	std::cout<<"gr= "<<para.gr()<<" ,gcr= "<<para.gcr()<<" ,Jr= "<<para.Jr()
-        <<" ,Jcr= "<<para.Jcr()<<" ,AParticleNo= "<<ParticleNo(para, outfile1);
+        <<" ,Jcr= "<<para.Jcr()<<" ,AParticleNo= "<<ParticleNo(para, outfile1)<<endl;
         outfile1.close();
+        outfile1.open("./result/SigmaParticleP");
+	std::cout<<"gr= "<<para.gr()<<" ,gcr= "<<para.gcr()<<" ,Jr= "<<para.Jr()
+        <<" ,Jcr= "<<para.Jcr()<<" ,AParticleNo= "<<SigmaParticleNo(para, outfile1)<<endl;;
+        outfile1.close();
+        
+        outfile1.open("./result/CorrelationP");
+        Correlation(para, outfile1);
+        outfile1.close();
+
+        outfile1.open("./result/SigmaCorrelationP");
+        SigmaCorrelation(para, outfile1);
+        outfile1.close();
+
 	/*<<" ,SigmaParticleNo= "<<SigmaParticleNo(para)<<" ,<A>= "<<OrderParameter(para)
 	<<" ,SecondCorrelation= "<<secondcorrelation(para)
 	<<" ,Parity= "<<Parity(para)<<endl;*/
