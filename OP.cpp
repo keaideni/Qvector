@@ -628,12 +628,13 @@ const double OP::AverageR(const OP& wave, const OP& a)
 
 
 
-const double OP::Average(const OP& wave, const OP& OS, const OP& OE)
+const double OP::Average(const OP& wave, const OP& OS, const OP& O)
 {
         _PRL.clear();
         _PMat.clear();
         _PDim.clear();
         OP waveadjoint(wave.adjoint());
+        OP OE(O.adjoint());
 
 	for(auto itwave=wave._PRL.begin(); itwave!=wave._PRL.end(); ++itwave)
 	{
