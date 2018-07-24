@@ -20,7 +20,7 @@ wave(sup.Wave())
         eigs.init();
         eigs.compute(10000);
         time(&end);
-        cout<<"The calculation takes "<<end-start<<"s."<<endl;
+        //cout<<"The calculation takes "<<end-start<<"s."<<endl;
         if (eigs.info() == SUCCESSFUL)
         {
 
@@ -42,7 +42,7 @@ wave(sup.Wave())
 		
                 //std::cout << eigs.num_iterations() << std::endl;
         }
-        cout<<"The values copy takes "<<end-start<<"s."<<endl;
+        //cout<<"The values copy takes "<<end-start<<"s."<<endl;
 
                 
 }
@@ -63,7 +63,7 @@ wave(sup.Wave())
         eigs.init(pt);
         eigs.compute(10000);
         time(&end);
-        cout<<"The calculation takes "<<end-start<<"s."<<endl;
+        //cout<<"The calculation takes "<<end-start<<"s."<<endl;
         if (eigs.info() == SUCCESSFUL)
         {
 		vector<double> f;double sum(0);
@@ -82,7 +82,7 @@ wave(sup.Wave())
                           
                 para.Energy = eigs.eigenvalues()(0);
         }
-        cout<<"The values copy takes "<<end-start<<"s."<<endl;
+        //cout<<"The values copy takes "<<end-start<<"s."<<endl;
 
                 
 };
