@@ -18,7 +18,7 @@ wave(sup.Wave())
         time_t start, end;
         time(&start);
         eigs.init();
-        eigs.compute(10000);
+        eigs.compute(100000);
         time(&end);
         //cout<<"The calculation takes "<<end-start<<"s."<<endl;
         if (eigs.info() == SUCCESSFUL)
@@ -61,7 +61,7 @@ wave(sup.Wave())
         time_t start, end;
         time(&start);
         eigs.init(pt);
-        eigs.compute(10000);
+        eigs.compute(100000);
         time(&end);
         //cout<<"The calculation takes "<<end-start<<"s."<<endl;
         if (eigs.info() == SUCCESSFUL)

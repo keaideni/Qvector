@@ -28,12 +28,12 @@ pari(_pari)
 
         int OS(1), OE(para.LatticeSize());
 
-        //cout<<"===================The growth process:==================="<<endl;
+        cout<<"===================The growth process:==================="<<endl;
         SaveAll<<"===================The growth process:==================="<<endl;
         Parameter paraup;
         paraup.ChangeD(40);
         BuildUp(paraup, OS, OE);
-        //cout<<"===================The sweep process:==================="<<endl;
+        cout<<"===================The sweep process:==================="<<endl;
         SaveAll<<"===================The sweep process:==================="<<endl;
 
 
@@ -87,9 +87,9 @@ void DMRG::BuildUp(Parameter& para, int& OS, int& OE)
                 //cout<<"the en operator takes "<<(double)(Sup.ten)/CLOCKS_PER_SEC<<"s."<<endl;        
                 
 
-                //cout.precision(15);
-                /*cout<<"OS=\t"<<setw(10)<<OS<<"; OE=\t"<<setw(10)<<OE<<"; The energy=\t"
-                <<setw(18)<<para.Energy<<endl;*/
+                cout.precision(15);
+                cout<<"OS=\t"<<setw(10)<<OS<<"; OE=\t"<<setw(10)<<OE<<"; The energy=\t"
+                <<setw(18)<<para.Energy<<endl;
                 SaveAll<<"OS=\t"<<setw(10)<<OS<<"; OE=\t"<<setw(10)<<OE<<"; The energy=\t"
                 <<setw(18)<<para.Energy<<endl;
                 //int nn; cin>>nn;
@@ -173,7 +173,7 @@ void DMRG::Sweep(Parameter& para, int& OS, int& OE)
                         stop=(err<1e-6);
 
                         if(!stop)
-                        //cout<<"==========the "<<SweepNo<<"th sweeps=============="<<endl;
+                        cout<<"==========the "<<SweepNo<<"th sweeps=============="<<endl;
                         SaveAll<<"==========the "<<SweepNo++<<"th sweeps=============="<<endl;
                         if(SweepNo==2)Gdir=-1;
                         
@@ -226,8 +226,8 @@ void DMRG::CalcuEnergy(Parameter& para, int& OS, int& OE, const int& dir, const 
 
 
         cout.precision(15);
-        /*cout<<"OS=\t"<<setw(10)<<OS<<"; OE=\t"<<setw(10)<<OE<<"; The energy=\t"
-        <<setw(18)<<para.Energy<<endl;*/
+        cout<<"OS=\t"<<setw(10)<<OS<<"; OE=\t"<<setw(10)<<OE<<"; The energy=\t"
+        <<setw(18)<<para.Energy<<endl;
         SaveAll<<"OS=\t"<<setw(10)<<OS<<"; OE=\t"<<setw(10)<<OE<<"; The energy=\t"
         <<setw(18)<<para.Energy<<endl;
 

@@ -12,36 +12,21 @@ int main(void)
         //Sub::nmax=para.nmax();
         //test(para);
 
-
+        ofstream outfile, outfile1;
         DMRG haha(para, Positive);
 
-        ofstream outfile("./result/ResultP");
+        outfile.open("./result/ResultP");
         outfile.precision(20);
-        outfile<<"gr= "<<para.gr()<<" ,gcr= "<<para.gcr()<<" ,Jr= "<<para.Jr()
-        <<" ,Jcr= "<<para.Jcr()<<" ,Energy= "<<haha.FEnergy()<<"\t";
+        outfile<<"gr=\t"<<para.gr()<<"\t gcr=\t"<<para.gcr()<<"\t Jr=\t"<<para.Jr()
+        <<"\t Jcr=\t"<<para.Jcr()<<"\t Energy=\t"<<haha.FEnergy()<<"\t";
 
-        //DMRG hehe(para, Negative);
 
-        //outfile.open("./result/ResultN");
-        //outfile.precision(20);
-        //outfile<<"gr= "<<para.gr()<<" ,gcr= "<<para.gcr()<<" ,Jr= "<<para.Jr()
-        //<<" ,Jcr= "<<para.Jcr()<<" ,Energy= "<<hehe.FEnergy()<<endl;
-        //outfile.close();
-        /*<<" ,ExcitedEnergy= "<<haha.Excited()<<" ,Entropy= "
-        <<haha.Entropy()<<endl<<" ,AParticleNo= "<<ParticleNo(para)<<" ,SigmaParticleNo= "
-	<<SigmaParticleNo(para)<<" ,<A>= "<<OrderParameter(para)
-	<<" ,SecondCorrelation= "<<secondcorrelation(para)
-	<<" ,Parity= "<<Parity(para)<<endl;*/
-        ofstream outfile1("./result/ParticleP");
-	//std::cout<<"gr= "<<para.gr()<<" ,gcr= "<<para.gcr()<<" ,Jr= "<<para.Jr()
-        //<<" ,Jcr= "<<para.Jcr()<<" ,AParticleNo= "<<ParticleNo(para, outfile1)<<endl;	
-        outfile<<" ,AParticleNo= "<<ParticleNo(para, outfile1)<<"\t";
+        outfile1.open("./result/ParticleP");
+        outfile<<"\t AParticleNo=\t"<<ParticleNo(para, outfile1)<<"\t";
 
         outfile1.close();
         outfile1.open("./result/SigmaParticleP");
-	//std::cout<<"gr= "<<para.gr()<<" ,gcr= "<<para.gcr()<<" ,Jr= "<<para.Jr()
-        //<<" ,Jcr= "<<para.Jcr()<<" ,AParticleNo= "<<SigmaParticleNo(para, outfile1)<<endl;;
-        outfile<<" ,SigmaAParticleNo= "<<SigmaParticleNo(para, outfile1)<<endl;
+        outfile<<"\t SigmaParticleNo=\t"<<SigmaParticleNo(para, outfile1)<<endl;
        
         outfile1.close();
         
@@ -58,19 +43,15 @@ int main(void)
 
         outfile.open("./result/ResultN");
         outfile.precision(20);
-        outfile<<"gr= "<<para.gr()<<" ,gcr= "<<para.gcr()<<" ,Jr= "<<para.Jr()
-        <<" ,Jcr= "<<para.Jcr()<<" ,Energy= "<<hahaha.FEnergy()<<"\t";
+        outfile<<"gr=\t"<<para.gr()<<"\t gcr=\t"<<para.gcr()<<"\t Jr=\t"<<para.Jr()
+        <<"\t Jcr=\t"<<para.Jcr()<<"\t Energy=\t"<<hahaha.FEnergy()<<"\t";
 
         outfile1.open("./result/ParticleN");
-	//std::cout<<"gr= "<<para.gr()<<" ,gcr= "<<para.gcr()<<" ,Jr= "<<para.Jr()
-        //<<" ,Jcr= "<<para.Jcr()<<" ,AParticleNo= "<<ParticleNo(para, outfile1)<<endl;	
-        outfile<<" ,AParticleNo= "<<ParticleNo(para, outfile1)<<"\t";
+        outfile<<"\t AParticleNo=\t"<<ParticleNo(para, outfile1)<<"\t";
 
         outfile1.close();
         outfile1.open("./result/SigmaParticleN");
-	//std::cout<<"gr= "<<para.gr()<<" ,gcr= "<<para.gcr()<<" ,Jr= "<<para.Jr()
-        //<<" ,Jcr= "<<para.Jcr()<<" ,AParticleNo= "<<SigmaParticleNo(para, outfile1)<<endl;;
-        outfile<<" ,SigmaParticleNo= "<<SigmaParticleNo(para, outfile1)<<endl;;
+        outfile<<"\t SigmaParticleNo=\t"<<SigmaParticleNo(para, outfile1)<<endl;;
        
         outfile1.close();
         
