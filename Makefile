@@ -6,41 +6,33 @@
 ##Intel C++ compiler (good to use with Intel MKL if available)
 CCCOM=g++ -std=c++11 -g
 #########
-
-
-## Flags to give the compiler for "release mode"
+TGT = main
+SRCS = OP.cpp SOP.cpp Sub.cpp QWave.cpp SuperEnergy.cpp DMRG.cpp main.cpp
+CUR_DIR = $(shell pwd)
+## Flags tcpp give the ccppmpiler fcppr "release mcppde"
 
 
 
 #LIBFLAGS = -larmadillo
-LIBSPECTRA = -I/home/keaideni/WORK/Lib/spectra/include/ -I/home/keaideni/WORK/Lib/eigen-git-mirror/
+LIBSPECTRA = -O2 -I/home/keaideni/WORK/Lib/spectra/include/ -I/home/keaideni/WORK/Lib/eigen-git-mirror/
 
 
 
+$(TGT) : $(SRCS:.cpp=.o)
+	$(CCCOM) $^ -o $@ $(LIBSPECTRA) 
+%.o:%.cpp
+	$(CCCOM) -c $<   $(LIBSPECTRA) 
+
+%.d:%.cpp
+	@$(CCCOM) -MM $< > $@ 
+
+sinclude $(SRCS:.cpp=.d)
 
 
-obj=main.o OP.o SOP.o Sub.o QWave.o SuperEnergy.o DMRG.o
-main:$(obj)
-	$(CCCOM) -o main $(obj)  $(LIBSPECTRA)
-main.o:main.cpp  test.h SingleSub.h DMRG.h Calcu.h
-	$(CCCOM) -c main.cpp -O2 $(LIBSPECTRA)
-OP.o:OP.cpp OP.h
-	$(CCCOM) -c OP.cpp -O2 $(LIBSPECTRA)
-SOP.o:SOP.cpp SOP.h
-	$(CCCOM) -c SOP.cpp -O2 $(LIBSPECTRA)
-Sub.o:Sub.cpp Sub.h Parameter.h
-	$(CCCOM) -c Sub.cpp -O2 $(LIBSPECTRA)
-QWave.o:QWave.cpp QWave.h
-	$(CCCOM) -c QWave.cpp -O2 $(LIBSPECTRA)
-SuperEnergy.o:SuperEnergy.cpp SuperEnergy.h
-	$(CCCOM) -c SuperEnergy.cpp -O2 $(LIBSPECTRA)
-
-DMRG.o:DMRG.cpp DMRG.h SuperEnergy.h Super.h 
-	$(CCCOM) -c DMRG.cpp -O2 $(LIBSPECTRA)
-.PHONY:clean
 clean:
-	rm -f main $(obj)
+	rm -f $(TGT) $(SRCS:.cpp=.o) $(SRCS:.cpp=.d)
 
+.PHONY:clean
 
 
 

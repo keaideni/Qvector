@@ -1,7 +1,6 @@
 #ifndef CALCU_H
 #define CALCU_H
 #define pi 3.1415926
-
 #include <cmath>
 #include "DMRG.h"
 
@@ -302,6 +301,7 @@ void Correlation(const Parameter& para, ofstream& outfile)
         for(int i=0; i<Corr.size(); ++i)
         {
                 outfile<<"R= "<<i<<" ,Corr(R)= "<<Corr.at(i)<<endl;
+                cout<<"R= "<<i<<" ,Corr(R)= "<<Corr.at(i)<<endl;
         }
         //outfile.close();
 }
@@ -367,30 +367,14 @@ void SigmaCorrelation(const Parameter& para, ofstream& outfile)
         for(int i=0; i<Corr.size(); ++i)
         {
                 outfile<<"R= "<<i<<" ,Corr(R)= "<<Corr.at(i)<<endl;
+                cout<<"R= "<<i<<" ,Corr(R)= "<<Corr.at(i)<<endl;
+                
         }
-        //outfile.close();
+        outfile.close();
 }
 
 
 /*
-MatrixXd Kron(const MatrixXd& a, const MatrixXd& b)
-{
-        MatrixXd ab(MatrixXd::Zero(a.rows()*b.rows(),a.cols()*b.cols()));
-
-        int sizer(b.rows()),sizec(b.cols());
-        for(int i=0; i<a.rows(); ++i)
-        {
-                for(int j=0; j<a.cols(); ++j)
-                {
-                        int startr(i*b.rows()),startc(j*b.cols());
-
-                        ab.block(startr,startc,sizer, sizec)=a(i,j)*b;
-                }
-        }
-
-        return ab;
-}
-
 double secondcorrelation(const Parameter& para);
 double secondcorrelation(const Parameter& para)
 {
@@ -405,54 +389,7 @@ double secondcorrelation(const Parameter& para)
 	return fenzi/fenmu;
 
 }
-
-double Parity(const Parameter& para);
-double Parity(const Parameter& para)
-{
-
-        Sub m(para, 0);
-	Matrix2d tempsigma;
-	tempsigma<<0,0,0,1;
-	MatrixXd tempeye(MatrixXd::Identity(m.nmax+1, m.nmax+1));
-        MatrixXd particleno(m.SysAdag()*m.SysA()+Kron(tempeye, tempsigma));
-	
-	//std::cout<<particleno<<endl<<"haha"<<endl;
-	for(int i=0; i<particleno.rows(); ++i)
-	{
-		particleno(i,i)=cos(particleno(i,i)*pi);
-	}
-	//std::cout<<particleno<<endl;
-	
-	MatrixXd paritymatrix1(particleno);
-	for(int i=2; i<para.LatticeSize()/2; ++i)
-	{
-		paritymatrix1=Kron(paritymatrix1, particleno);
-		MatrixXd tempTrunc;
-		ReadTruncM(tempTrunc, i);
-		paritymatrix1=tempTrunc.adjoint()*paritymatrix1*tempTrunc;
-	}
-	paritymatrix1=Kron(paritymatrix1, particleno);
-
-
-	
-	MatrixXd paritymatrix2(particleno);
-	for(int i=2; i<para.LatticeSize()/2; ++i)
-	{
-		paritymatrix2=Kron(paritymatrix2, particleno);
-		MatrixXd tempTrunc;
-		ReadTruncM(tempTrunc, para.LatticeSize()-i+1);
-		paritymatrix2=tempTrunc.adjoint()*paritymatrix2*tempTrunc;
-	}
-	paritymatrix2=Kron(paritymatrix2, particleno);
-
-	
-        MatrixXd wave;
-        ReadTruncM(wave, 10000);
-
-	return (wave.adjoint()*paritymatrix1*wave*paritymatrix2.transpose()).trace();
-
-
-}*/
+*/
 
 
 

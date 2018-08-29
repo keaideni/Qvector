@@ -12,11 +12,11 @@
 #include <fstream>
 #include <Eigen/Dense>
 #include <cmath>
-
-#include<sstream>
-#include<string>
+#include <vector>
+#include <sstream>
+#include <string>
 #include <unordered_map>
-#include<Eigen/Eigenvalues>
+#include <Eigen/Eigenvalues>
 using namespace std;
 using namespace Eigen;
 enum Parity

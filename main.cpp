@@ -39,7 +39,7 @@ int main(void)
         outfile1.close();
         outfile.close();
 
-        DMRG hahaha(para, Negative);
+        /*DMRG hahaha(para, Negative);
 
         outfile.open("./result/ResultN");
         outfile.precision(20);
@@ -62,5 +62,5 @@ int main(void)
         outfile1.open("./result/SigmaCorrelationN");
         SigmaCorrelation(para, outfile1);
         outfile1.close();
-        outfile.close();
+        outfile.close();*/
 }

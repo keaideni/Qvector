@@ -168,9 +168,9 @@ void DMRG::Sweep(Parameter& para, int& OS, int& OE)
                 if((OS==(para.LatticeSize()/2)&dir==1)|(OE==(para.LatticeSize()/2+1)&dir==-1))
                 {
                         err=abs(para.Energy-_FEnergy);SaveAll<<err<<endl;
-                        _FEnergy=para.Energy;
+                        _FEnergy=para.Energy<_FEnergy?para.Energy:_FEnergy;
                         Gdir*=-1;
-                        stop=(err<1e-6);
+                        stop=(err<1e-6)||(para.Energy>_FEnergy);
 
                         if(!stop)
                         cout<<"==========the "<<SweepNo<<"th sweeps=============="<<endl;
