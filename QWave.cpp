@@ -971,27 +971,27 @@ void QWave::Hamiltanian(const Sub& Sys, const SingleSub& M, const SingleSub& N, 
         NOPWave(N.System(), wave, pari);
         EnvOPWave(Env.System(), wave, pari);
 
-        SysMOPWave(Sys.SysA(), M.SysAdag(), wave, -1*para.Jr(), pari);
-        SysMOPWave(Sys.SysAdag(), M.SysA(), wave, -1*para.Jr(), pari);
-        SysMOPWave(Sys.SysAdag(), M.SysAdag(), wave, -1*para.Jcr(), pari);
-        SysMOPWave(Sys.SysA(), M.SysA(), wave, -1*para.Jcr(), pari);
+        SysMOPWave(Sys.SysA(), M.SysAdag(), wave, -0.5*para.Jr(), pari);
+        SysMOPWave(Sys.SysAdag(), M.SysA(), wave, -0.5*para.Jr(), pari);
+        SysMOPWave(Sys.SysAdag(), M.SysAdag(), wave, -0.5*para.Jcr(), pari);
+        SysMOPWave(Sys.SysA(), M.SysA(), wave, -0.5*para.Jcr(), pari);
 
 
-        EnvMOPWave(Env.SysA1(), M.SysAdag(), wave, -1*para.Jr(), pari);
-        EnvMOPWave(Env.SysAdag1(), M.SysA(), wave, -1*para.Jr(), pari);
-        EnvMOPWave(Env.SysAdag1(), M.SysAdag(), wave, -1*para.Jcr(), pari);
-        EnvMOPWave(Env.SysA1(), M.SysA(), wave, -1*para.Jcr(), pari);
+        EnvMOPWave(Env.SysA1(), M.SysAdag(), wave, -0.5*para.Jr(), pari);
+        EnvMOPWave(Env.SysAdag1(), M.SysA(), wave, -0.5*para.Jr(), pari);
+        EnvMOPWave(Env.SysAdag1(), M.SysAdag(), wave, -0.5*para.Jcr(), pari);
+        EnvMOPWave(Env.SysA1(), M.SysA(), wave, -0.5*para.Jcr(), pari);
 
 
-        EnvNOPWave(Env.SysA(), N.SysAdag(), wave, -1*para.Jr(), pari);
-        EnvNOPWave(Env.SysAdag(), N.SysA(), wave, -1*para.Jr(), pari);
-        EnvNOPWave(Env.SysAdag(), N.SysAdag(), wave, -1*para.Jcr(), pari);
-        EnvNOPWave(Env.SysA(), N.SysA(), wave, -1*para.Jcr(), pari);
+        EnvNOPWave(Env.SysA(), N.SysAdag(), wave, -0.5*para.Jr(), pari);
+        EnvNOPWave(Env.SysAdag(), N.SysA(), wave, -0.5*para.Jr(), pari);
+        EnvNOPWave(Env.SysAdag(), N.SysAdag(), wave, -0.5*para.Jcr(), pari);
+        EnvNOPWave(Env.SysA(), N.SysA(), wave, -0.5*para.Jcr(), pari);
 
-        SysNOPWave(Sys.SysA1(), N.SysAdag(), wave, -1*para.Jr(), pari);
-        SysNOPWave(Sys.SysAdag1(), N.SysA(), wave, -1*para.Jr(), pari);
-        SysNOPWave(Sys.SysAdag1(), N.SysAdag(), wave, -1*para.Jcr(), pari);
-        SysNOPWave(Sys.SysA1(), N.SysA(), wave, -1*para.Jcr(), pari);
+        SysNOPWave(Sys.SysA1(), N.SysAdag(), wave, -0.5*para.Jr(), pari);
+        SysNOPWave(Sys.SysAdag1(), N.SysA(), wave, -0.5*para.Jr(), pari);
+        SysNOPWave(Sys.SysAdag1(), N.SysAdag(), wave, -0.5*para.Jcr(), pari);
+        SysNOPWave(Sys.SysA1(), N.SysA(), wave, -0.5*para.Jcr(), pari);
 
 
 }
@@ -1009,34 +1009,34 @@ QWave(Sys, M, N, Env)
         tsys+=end-start;
 
         start=clock();
-        SysMOPWave(Sys.SysA(), M.SysAdag(), wave, -1*para.Jr(), pari);
-        SysMOPWave(Sys.SysAdag(), M.SysA(), wave, -1*para.Jr(), pari);
-        SysMOPWave(Sys.SysAdag(), M.SysAdag(), wave, -1*para.Jcr(), pari);
-        SysMOPWave(Sys.SysA(), M.SysA(), wave, -1*para.Jcr(), pari);
+        SysMOPWave(Sys.SysA(), M.SysAdag(), wave, -0.5*para.Jr(), pari);
+        SysMOPWave(Sys.SysAdag(), M.SysA(), wave, -0.5*para.Jr(), pari);
+        SysMOPWave(Sys.SysAdag(), M.SysAdag(), wave, -0.5*para.Jcr(), pari);
+        SysMOPWave(Sys.SysA(), M.SysA(), wave, -0.5*para.Jcr(), pari);
         end=clock();
         tsm+=end-start;
 
         start=clock();
-        EnvMOPWave(Env.SysA1(), M.SysAdag(), wave, -1*para.Jr(), pari);
-        EnvMOPWave(Env.SysAdag1(), M.SysA(), wave, -1*para.Jr(), pari);
-        EnvMOPWave(Env.SysAdag1(), M.SysAdag(), wave, -1*para.Jcr(), pari);
-        EnvMOPWave(Env.SysA1(), M.SysA(), wave, -1*para.Jcr(), pari);
+        EnvMOPWave(Env.SysA1(), M.SysAdag(), wave, -0.5*para.Jr(), pari);
+        EnvMOPWave(Env.SysAdag1(), M.SysA(), wave, -0.5*para.Jr(), pari);
+        EnvMOPWave(Env.SysAdag1(), M.SysAdag(), wave, -0.5*para.Jcr(), pari);
+        EnvMOPWave(Env.SysA1(), M.SysA(), wave, -0.5*para.Jcr(), pari);
         end=clock();
         tem+=(end-start);
 
         start=clock();
-        EnvNOPWave(Env.SysA(), N.SysAdag(), wave, -1*para.Jr(), pari);
-        EnvNOPWave(Env.SysAdag(), N.SysA(), wave, -1*para.Jr(), pari);
-        EnvNOPWave(Env.SysAdag(), N.SysAdag(), wave, -1*para.Jcr(), pari);
-        EnvNOPWave(Env.SysA(), N.SysA(), wave, -1*para.Jcr(), pari);
+        EnvNOPWave(Env.SysA(), N.SysAdag(), wave, -0.5*para.Jr(), pari);
+        EnvNOPWave(Env.SysAdag(), N.SysA(), wave, -0.5*para.Jr(), pari);
+        EnvNOPWave(Env.SysAdag(), N.SysAdag(), wave, -0.5*para.Jcr(), pari);
+        EnvNOPWave(Env.SysA(), N.SysA(), wave, -0.5*para.Jcr(), pari);
         end=clock();
         ten+=end-start;
 
         start=clock();
-        SysNOPWave(Sys.SysA1(), N.SysAdag(), wave, -1*para.Jr(), pari);
-        SysNOPWave(Sys.SysAdag1(), N.SysA(), wave, -1*para.Jr(), pari);
-        SysNOPWave(Sys.SysAdag1(), N.SysAdag(), wave, -1*para.Jcr(), pari);
-        SysNOPWave(Sys.SysA1(), N.SysA(), wave, -1*para.Jcr(), pari);
+        SysNOPWave(Sys.SysA1(), N.SysAdag(), wave, -0.5*para.Jr(), pari);
+        SysNOPWave(Sys.SysAdag1(), N.SysA(), wave, -0.5*para.Jr(), pari);
+        SysNOPWave(Sys.SysAdag1(), N.SysAdag(), wave, -0.5*para.Jcr(), pari);
+        SysNOPWave(Sys.SysA1(), N.SysA(), wave, -0.5*para.Jcr(), pari);
         end=clock();
         tsn+=end-start;
 

@@ -21,7 +21,7 @@ LIBSPECTRA = -O2 -I/home/keaideni/WORK/Lib/spectra/include/ -I/home/keaideni/WOR
 $(TGT) : $(SRCS:.cpp=.o)
 	$(CCCOM) $^ -o $@ $(LIBSPECTRA) 
 %.o:%.cpp
-	$(CCCOM) -c $<   $(LIBSPECTRA) 
+	$(CCCOM) -c $< -o $@  $(LIBSPECTRA) 
 
 %.d:%.cpp
 	@$(CCCOM) -MM $< > $@ 

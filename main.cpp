@@ -13,7 +13,7 @@ int main(void)
         //test(para);
 
         ofstream outfile, outfile1;
-        DMRG haha(para, Positive);
+        /*DMRG haha(para, Positive);
 
         outfile.open("./result/ResultP");
         outfile.precision(20);
@@ -37,9 +37,9 @@ int main(void)
         outfile1.open("./result/SigmaCorrelationP");
         SigmaCorrelation(para, outfile1);
         outfile1.close();
-        outfile.close();
+        outfile.close();*/
 
-        /*DMRG hahaha(para, Negative);
+        DMRG hahaha(para, Negative);
 
         outfile.open("./result/ResultN");
         outfile.precision(20);
@@ -62,5 +62,5 @@ int main(void)
         outfile1.open("./result/SigmaCorrelationN");
         SigmaCorrelation(para, outfile1);
         outfile1.close();
-        outfile.close();*/
+        outfile.close();
 }

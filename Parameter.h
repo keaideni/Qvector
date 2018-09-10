@@ -43,6 +43,7 @@ public:
                 infile>>temp>>_nmax>>temp>>_D>>temp>>_LatticeSize>>temp>>_omega0>>
                         temp>>_omegaq>>temp>>_gr>>temp>>_gcr
                 >>temp>>_Jr>>temp>>_Jcr;
+                infile.close();
         };
         
 };

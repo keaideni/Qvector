@@ -594,9 +594,15 @@ const double OP::AverageL(const OP& wave, const OP& a)
                 {
 		        if(itwave->second==ita->first)
                         {
-                	        _PMat.insert(pair<string, MatrixXd>(itwave->first, wave._PMat.at(ita->second).adjoint()*a._PMat.at(ita->first)*wave._PMat.at(itwave->first)));
+                                for(auto itwavepri=wave._PRL.begin(); itwavepri!=wave._PRL.end();++itwavepri)
+                                {
+                                        if(itwavepri->second==ita->second)
+                                        {
+                	                        _PMat.insert(pair<string, MatrixXd>(itwave->first, wave._PMat.at(itwavepri->first).adjoint()*a._PMat.at(ita->first)*wave._PMat.at(itwave->first)));
+		                                _PRL.insert(pair<string, string>(itwave->first, itwavepri->first));                
+                                        }
+                                }
 
-		                _PRL.insert(pair<string, string>(itwave->first, wave._PRL.at(ita->second)));                
                         }
 		
                 }

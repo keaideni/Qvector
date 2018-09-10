@@ -42,16 +42,16 @@ _System(SubL._System, SubR._SysEye)
         _System.add(temp);
 
         temp.Kron(SubL._SysAdag, SubR._SysA1);
-        _System.add(-1*temp*para.Jr());
+        _System.add(-0.5*temp*para.Jr());
 
         temp.Kron(SubL._SysA, SubR._SysAdag1);
-        _System.add(-1*temp*para.Jr());
+        _System.add(-0.5*temp*para.Jr());
 
         temp.Kron(SubL._SysAdag, SubR._SysAdag1);
-        _System.add(-1*temp*para.Jcr());
+        _System.add(-0.5*temp*para.Jcr());
 
         temp.Kron(SubL._SysA, SubR._SysA1);
-        _System.add(-1*temp*para.Jcr());
+        _System.add(-0.5*temp*para.Jcr());
 
         
 

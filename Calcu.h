@@ -13,13 +13,13 @@ double ParticleNo(const Parameter& para, ofstream& outfile)
 
         for(int i=2; i<=para.LatticeSize()/2; ++i)
         {
+                OP tempTrunc;
+                tempTrunc.TruncRead(i);
                 for(int j=0; j<i-1; ++j)
                 {
                         OP tempMat1(ParticleMat.at(j), m.SysEye());
                         ParticleMat.at(j)=tempMat1;
                         if(i==para.LatticeSize()/2)continue;
-                        OP tempTrunc;
-                        tempTrunc.TruncRead(i);
                         ParticleMat.at(j).TruncU(tempTrunc);
 
                 }
@@ -28,20 +28,18 @@ double ParticleNo(const Parameter& para, ofstream& outfile)
                 OP tempppp(Sys.SysEye(), m.SysAdag()*m.SysA());
                 ParticleMat.push_back(tempppp);
                 if(i==para.LatticeSize()/2)break;
-                OP tempTrunc;
-                tempTrunc.TruncRead(i);
                 ParticleMat.at(i-1).TruncU(tempTrunc);
         }
         ParticleMat.push_back(m.SysAdag()*m.SysA());
         for(int i=2; i<=para.LatticeSize()/2; ++i)
         {
+                OP tempTrunc;
+                tempTrunc.TruncRead(para.LatticeSize()-i+1);
                 for(int j=0; j<i-1; ++j)
                 {
                         OP tempMat2(ParticleMat.at(para.LatticeSize()/2+j), m.SysEye());
                         ParticleMat.at(para.LatticeSize()/2+j)=tempMat2;
-                        OP tempTrunc;
                         if(i==para.LatticeSize()/2)continue;
-                        tempTrunc.TruncRead(para.LatticeSize()-i+1);
                         ParticleMat.at(para.LatticeSize()/2+j).TruncU(tempTrunc);
 
                 }
@@ -50,8 +48,6 @@ double ParticleNo(const Parameter& para, ofstream& outfile)
                 OP temppp(Sys.SysEye(), m.SysAdag()*m.SysA());
                 ParticleMat.push_back(temppp);
                 if(i==para.LatticeSize()/2)break;
-                OP tempTrunc;
-                tempTrunc.TruncRead(para.LatticeSize()-i+1);
                 ParticleMat.at(para.LatticeSize()/2+i-1).TruncU(tempTrunc);
         }
 
@@ -75,7 +71,8 @@ double ParticleNo(const Parameter& para, ofstream& outfile)
         outfile.precision(20);
         for(int i=0; i<para.LatticeSize(); ++i)
         {
-                outfile<<"i= "<<(i+1)<<" ,ParticleNo= "<<Particle.at(i)<<endl;
+                outfile<<"i=\t"<<(i+1)<<"\t ParticleNo=\t"<<Particle.at(i)<<endl;
+                cout<<"i=\t"<<(i+1)<<"\t ParticleNo=\t"<<Particle.at(i)<<endl;
         }
         //outfile.close();
 
@@ -163,7 +160,8 @@ double SigmaParticleNo(const Parameter& para, ofstream& outfile)
         outfile.precision(20);
         for(int i=0; i<para.LatticeSize(); ++i)
         {
-                outfile<<"i= "<<(i+1)<<" ,ParticleNo= "<<SigmaParticle.at(i)<<endl;
+                outfile<<"i=\t"<<(i+1)<<"\tParticleNo=\t"<<SigmaParticle.at(i)<<endl;
+                cout<<"i=\t"<<(i+1)<<"\t ParticleNo=\t"<<SigmaParticle.at(i)<<endl;
         }
 
         return SigmaParticle.at(para.LatticeSize()/2);
@@ -173,82 +171,10 @@ double SigmaParticleNo(const Parameter& para, ofstream& outfile)
 
 
 
-/*double OrderParameter(const Parameter& para);
-double OrderParameter(const Parameter& para)
-{
-        Sub Sys, m(para,1);
-        vector<MatrixXd> OrderMat;
-        OrderMat.push_back(m.SysA());
-
-        for(int i=2; i<=para.LatticeSize()/2; ++i)
-        {
-                for(int j=0; j<i-1; ++j)
-                {
-                        OrderMat.at(j)=(Kron(OrderMat.at(j), m.SysEye()));
-                        if(i==para.LatticeSize()/2)continue;
-                        MatrixXd tempTrunc;
-                        ReadTruncM(tempTrunc, i);
-                        OrderMat.at(j)=tempTrunc.adjoint()*OrderMat.at(j)*tempTrunc;
-
-                }
-                Sys.Read(i-1);
-                OrderMat.push_back(Kron(Sys.SysEye(), m.SysA()));
-                if(i==para.LatticeSize()/2)break;
-                MatrixXd tempTrunc;
-                ReadTruncM(tempTrunc, i);
-                OrderMat.at(i-1)=tempTrunc.adjoint()*OrderMat.at(i-1)*tempTrunc;
-        }
-        OrderMat.push_back(m.SysA());
-        for(int i=2; i<=para.LatticeSize()/2; ++i)
-        {
-                for(int j=0; j<i-1; ++j)
-                {
-                        OrderMat.at(para.LatticeSize()/2+j)=
-                        (Kron(OrderMat.at(para.LatticeSize()/2+j), m.SysEye()));
-                        MatrixXd tempTrunc;
-                        if(i==para.LatticeSize()/2)continue;
-                        ReadTruncM(tempTrunc, para.LatticeSize()-i+1);
-                        OrderMat.at(para.LatticeSize()/2+j)
-                        =tempTrunc.adjoint()*OrderMat.at(para.LatticeSize()/2+j)*tempTrunc;
-
-                }
-                Sys.Read(para.LatticeSize()+2-i);
-                OrderMat.push_back(Kron(Sys.SysEye(), m.SysA()));
-                if(i==para.LatticeSize()/2)break;
-                MatrixXd tempTrunc;
-                ReadTruncM(tempTrunc, para.LatticeSize()-i+1);
-                OrderMat.at(para.LatticeSize()/2+i-1)
-                =tempTrunc.adjoint()*OrderMat.at(para.LatticeSize()/2+i-1)*tempTrunc;
-        }
-
-
-        
-
-        MatrixXd wave;
-        ReadTruncM(wave, 10000);
-
-        vector<double> OrderNo;
-        for(int i=0; i<para.LatticeSize()/2; ++i)
-        {
-                OrderNo.push_back((wave.adjoint()*OrderMat.at(i)*wave).trace());
-        }for(int i=para.LatticeSize()/2; i<para.LatticeSize(); ++i)
-        {
-                OrderNo.push_back((wave*(OrderMat.at(i)).transpose()*wave.adjoint()).trace());
-        }
-        ofstream outfile("./result/Order");outfile.precision(20);
-        for(int i=0; i<para.LatticeSize(); ++i)
-        {
-                outfile<<"i= "<<(i+1)<<" ,Order= "<<OrderNo.at(i)<<endl;
-        }
-        outfile.close();
-
-        return OrderNo.at(para.LatticeSize()/2);
-}
 
 
 
 
-*/
 void Correlation(const Parameter& para, ofstream& outfile);
 void Correlation(const Parameter& para, ofstream& outfile)
 {
@@ -300,8 +226,8 @@ void Correlation(const Parameter& para, ofstream& outfile)
         //ofstream outfile("./result/Correlation");
         for(int i=0; i<Corr.size(); ++i)
         {
-                outfile<<"R= "<<i<<" ,Corr(R)= "<<Corr.at(i)<<endl;
-                cout<<"R= "<<i<<" ,Corr(R)= "<<Corr.at(i)<<endl;
+                outfile<<"R=\t"<<i<<"\t Corr(R)=\t"<<Corr.at(i)<<endl;
+                cout<<"R=\t"<<i<<"\t Corr(R)=\t"<<Corr.at(i)<<endl;
         }
         //outfile.close();
 }
@@ -366,8 +292,8 @@ void SigmaCorrelation(const Parameter& para, ofstream& outfile)
         //ofstream outfile("./result/SigmaCorrelation");
         for(int i=0; i<Corr.size(); ++i)
         {
-                outfile<<"R= "<<i<<" ,Corr(R)= "<<Corr.at(i)<<endl;
-                cout<<"R= "<<i<<" ,Corr(R)= "<<Corr.at(i)<<endl;
+                outfile<<"R=\t"<<i<<"\t Corr(R)=\t"<<Corr.at(i)<<endl;
+                cout<<"R=\t"<<i<<"\t Corr(R)=\t"<<Corr.at(i)<<endl;
                 
         }
         outfile.close();

@@ -30,18 +30,18 @@ pari(_pari)
 
         cout<<"===================The growth process:==================="<<endl;
         SaveAll<<"===================The growth process:==================="<<endl;
-        Parameter paraup;
-        paraup.ChangeD(40);
-        BuildUp(paraup, OS, OE);
+        //Parameter paraup;
+        //paraup.ChangeD(40);
+        BuildUp(para, OS, OE);
         cout<<"===================The sweep process:==================="<<endl;
         SaveAll<<"===================The sweep process:==================="<<endl;
 
 
         //para.ChangeD(200);
-        OS-=1;OE+=1;//This one for the IniWave works.
+        //OS-=1;OE+=1;//This one for the IniWave works.
         //OS=4; OE=7;
-        Sys.Read(OS); Env.Read(OE);
-        Sweep(para, OS, OE);
+        //Sys.Read(OS); Env.Read(OE);
+        //Sweep(para, OS, OE);
 
         //cout<<"===================The sweep process finished!================="<<endl;
         SaveAll<<"===================The sweep process finished!================="<<endl;
@@ -129,6 +129,9 @@ void DMRG::BuildUp(Parameter& para, int& OS, int& OE)
                 if(OE-OS==1)
                 {
                         InitWave=Supp.wave;
+                        OP finawavetemp;
+                        Supp.wave.Wave2SMEN(finawavetemp, pari);
+                        finawavetemp.TruncSave(10000);
                 }
 
         }
