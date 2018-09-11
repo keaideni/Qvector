@@ -72,7 +72,7 @@ double ParticleNo(const Parameter& para, ofstream& outfile)
         for(int i=0; i<para.LatticeSize(); ++i)
         {
                 outfile<<"i=\t"<<(i+1)<<"\t ParticleNo=\t"<<Particle.at(i)<<endl;
-                cout<<"i=\t"<<(i+1)<<"\t ParticleNo=\t"<<Particle.at(i)<<endl;
+                //cout<<"i=\t"<<(i+1)<<"\t ParticleNo=\t"<<Particle.at(i)<<endl;
         }
         //outfile.close();
 
@@ -161,7 +161,7 @@ double SigmaParticleNo(const Parameter& para, ofstream& outfile)
         for(int i=0; i<para.LatticeSize(); ++i)
         {
                 outfile<<"i=\t"<<(i+1)<<"\tParticleNo=\t"<<SigmaParticle.at(i)<<endl;
-                cout<<"i=\t"<<(i+1)<<"\t ParticleNo=\t"<<SigmaParticle.at(i)<<endl;
+                //cout<<"i=\t"<<(i+1)<<"\t ParticleNo=\t"<<SigmaParticle.at(i)<<endl;
         }
 
         return SigmaParticle.at(para.LatticeSize()/2);
@@ -227,7 +227,7 @@ void Correlation(const Parameter& para, ofstream& outfile)
         for(int i=0; i<Corr.size(); ++i)
         {
                 outfile<<"R=\t"<<i<<"\t Corr(R)=\t"<<Corr.at(i)<<endl;
-                cout<<"R=\t"<<i<<"\t Corr(R)=\t"<<Corr.at(i)<<endl;
+                //cout<<"R=\t"<<i<<"\t Corr(R)=\t"<<Corr.at(i)<<endl;
         }
         //outfile.close();
 }
@@ -242,7 +242,7 @@ void SigmaCorrelation(const Parameter& para, ofstream& outfile)
 	OP tempsigmaplu(para, SigmaP ), tempsigmamin(para, SigmaM);
 	
         OP tempeye(para, Iden);
-        OP Adag1(tempeye, tempsigmaplu), A(tempeye, tempsigmamin);
+        OP Adag1(tempeye, tempsigmaplu), A(tempeye, tempsigmamin), A1(tempeye, tempsigmamin);
 
         CorrMat.push_back(Adag1*A);
         for(int i=2; i<=para.LatticeSize()/2; ++i)
@@ -264,11 +264,15 @@ void SigmaCorrelation(const Parameter& para, ofstream& outfile)
 
                 OP tempMat2(Adag1, m.SysEye());
                 Adag1=tempMat2;
+                OP tempMatA1(A1, m.SysEye());
+                A1=tempMatA1;
                 if(i==para.LatticeSize()/2)continue;
-                OP tempTrunc;
+                OP tempTrunc, tempTruncA1;
                 tempTrunc.TruncRead(i);
+                tempTruncA1.TruncRead(para.LatticeSize()-i+1);
                 CorrMat.at(i-1).TruncU(tempTrunc);
                 Adag1.TruncU(tempTrunc);
+                A1.TruncU(tempTruncA1);
         }
 
         vector<double> Corr;
@@ -279,9 +283,6 @@ void SigmaCorrelation(const Parameter& para, ofstream& outfile)
                 OP tempaverage;
                 Corr.push_back(tempaverage.AverageL(wave, CorrMat.at(i)));
         }
-        Sub Sys;
-        Sys.Read(para.LatticeSize()/2+2);
-        OP A1(Sys.SysA1(), m.SysEye());
         
         OP averagemat;
         Corr.push_back(averagemat.Average(wave, Adag1, A1));
@@ -293,29 +294,31 @@ void SigmaCorrelation(const Parameter& para, ofstream& outfile)
         for(int i=0; i<Corr.size(); ++i)
         {
                 outfile<<"R=\t"<<i<<"\t Corr(R)=\t"<<Corr.at(i)<<endl;
-                cout<<"R=\t"<<i<<"\t Corr(R)=\t"<<Corr.at(i)<<endl;
+                //cout<<"R=\t"<<i<<"\t Corr(R)=\t"<<Corr.at(i)<<endl;
                 
         }
         outfile.close();
 }
 
 
-/*
+
 double secondcorrelation(const Parameter& para);
 double secondcorrelation(const Parameter& para)
 {
 	Sub a,m(para,0);
 	a.Read(para.LatticeSize()/2-1);
-	MatrixXd wave;
-	ReadTruncM(wave, 10000);
-	MatrixXd Adag(Kron(a.SysEye(),m.SysAdag())), A(Kron(a.SysEye(),m.SysA()));
-	double fenzi((wave.transpose()*Adag*Adag*A*A*wave).trace());
-	double fenmu(pow((wave.transpose()*Adag*A*wave).trace(),2));
+        OP Adag(a.SysAdag(), m.SysEye());
+        OP A(a.SysA(), m.SysEye());
+	OP wave;
+	wave.TruncRead(10000);
+        OP averagemat;
+	double fenzi(averagemat.AverageL(wave, Adag*Adag*A*A));
+	double fenmu(pow(averagemat.AverageL(wave, Adag*A),2));
 
 	return fenzi/fenmu;
 
 }
-*/
+
 
 
 

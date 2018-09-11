@@ -13,12 +13,12 @@ int main(void)
         //test(para);
 
         ofstream outfile, outfile1;
-        /*DMRG haha(para, Positive);
+        DMRG haha(para, Positive);
 
         outfile.open("./result/ResultP");
         outfile.precision(20);
         outfile<<"gr=\t"<<para.gr()<<"\t gcr=\t"<<para.gcr()<<"\t Jr=\t"<<para.Jr()
-        <<"\t Jcr=\t"<<para.Jcr()<<"\t Energy=\t"<<haha.FEnergy()<<"\t";
+        <<"\t Jcr=\t"<<para.Jcr()<<"\t Energy=\t"<<haha.FEnergy()<<"\t"<<"\t SecondCorrelation=\t"<<secondcorrelation(para)<<"\t";
 
 
         outfile1.open("./result/ParticleP");
@@ -37,14 +37,14 @@ int main(void)
         outfile1.open("./result/SigmaCorrelationP");
         SigmaCorrelation(para, outfile1);
         outfile1.close();
-        outfile.close();*/
+        outfile.close();
 
         DMRG hahaha(para, Negative);
 
         outfile.open("./result/ResultN");
         outfile.precision(20);
         outfile<<"gr=\t"<<para.gr()<<"\t gcr=\t"<<para.gcr()<<"\t Jr=\t"<<para.Jr()
-        <<"\t Jcr=\t"<<para.Jcr()<<"\t Energy=\t"<<hahaha.FEnergy()<<"\t";
+        <<"\t Jcr=\t"<<para.Jcr()<<"\t Energy=\t"<<hahaha.FEnergy()<<"\t"<<"\t SecondCorrelation=\t"<<secondcorrelation(para)<<"\t";
 
         outfile1.open("./result/ParticleN");
         outfile<<"\t AParticleNo=\t"<<ParticleNo(para, outfile1)<<"\t";
